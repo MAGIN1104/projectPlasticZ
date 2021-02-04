@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Opciones {
   List<String> tipodePago = ['Opcion 1', 'Opcion 2', 'Opcion 3'];
+
   List<String> lugarEntrega = [
     'Lugar 1',
     'Lugar 2',
@@ -10,6 +11,7 @@ class Opciones {
     'Lugar 5',
     'Lugar 6',
   ];
+
   List<String> diasEntrega = [
     'Dias op1',
     'Dias op2',

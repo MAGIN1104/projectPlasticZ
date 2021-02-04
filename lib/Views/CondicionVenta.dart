@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
 
 class CondicionVentas extends StatefulWidget {
@@ -40,7 +41,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
   Widget _tipodePago() {
     //DropDown
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: margenSimetrico,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +65,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
 
   Widget _lugarEntrega() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: margenSimetrico,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +89,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
 
   Widget _tiempoEntrega() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: margenSimetrico,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,7 +173,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+          padding: margenSimetrico,
           child: _opcionFormaDepagos(forma1, forma2, forma3),
         )
       ],
@@ -183,8 +184,9 @@ class _CondicionVentasState extends State<CondicionVentas> {
     TextEditingController controller;
     final nombreCheque = TextFormField(
       controller: controller,
-      decoration: InputDecoration(hintText: 'Nombre al cual va el cheque...'),
+      decoration: txtNombreCheque,
     );
+
     final banco = Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -200,13 +202,13 @@ class _CondicionVentasState extends State<CondicionVentas> {
         ]),
         TextFormField(
           keyboardType: TextInputType.number,
-          decoration: InputDecoration(hintText: 'Número de cuenta...'),
+          decoration: txtNumCuenta,
         ),
         SizedBox(
           height: 10,
         ),
         TextFormField(
-          decoration: InputDecoration(hintText: 'Nombre de la Cuenta...'),
+          decoration: txtNombreCuenta,
         )
       ],
     );
@@ -222,7 +224,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
       children: [
         CheckboxListTile(
             value: optCliche,
-            title: Text('Incluye precio cliche'),
+            title: txtcliche,
             onChanged: (value) {
               setState(() {
                 optCliche = value;
@@ -230,7 +232,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
             }),
         CheckboxListTile(
             value: optImpuesto,
-            title: Text('Incluye inpuestos de ley'),
+            title: txtimpuestos,
             onChanged: (value) {
               setState(() {
                 optImpuesto = value;
