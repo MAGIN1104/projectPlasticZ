@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 //MARGENES
 final EdgeInsetsGeometry margenSimetrico =
     EdgeInsets.symmetric(horizontal: 25, vertical: 15);
+const EdgeInsetsGeometry padingCard =
+    EdgeInsets.symmetric(horizontal: 20.0, vertical: 20);
 
 //COLORES
 
@@ -25,7 +27,16 @@ const txtSelectTipoBolsa = Text(
   'Seleccione tipo de bolsa:',
   style: szfuente,
 );
+const txtSelectTipoBobina = Text(
+  'Seleccione tipo de Bobina:',
+  style: szfuente,
+);
 const txtTOTAL = Text(
   'TOTAL',
   style: TextStyle(fontWeight: FontWeight.bold),
+);
+
+const txtIngreseDatos = Text(
+  'Ingrese datos:',
+  style: TextStyle(fontSize: 15.0),
 );

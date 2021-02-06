@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class Operaciones {
@@ -38,6 +36,30 @@ class Operaciones {
   }
 
   double precioXbolsa(double vprecioTotal, double vcantidad) {
+    if (vprecioTotal == null && vcantidad == null) {
+      return 1.0;
+    } else {
+      return vprecioTotal / vcantidad;
+    }
+  }
+
+  double kilosXRolloPEBD(double ancho, double espesor, double cantidadMetros) {
+    if (ancho == null && espesor == null && cantidadMetros == null) {
+      return 1.0;
+    } else {
+      return (ancho * espesor * 1.848 * cantidadMetros / 100000);
+    }
+  }
+
+  double kilosXRolloPP(double ancho, double espesor, double cantidadMetros) {
+    if (ancho == null && espesor == null && cantidadMetros == null) {
+      return 1.0;
+    } else {
+      return (ancho * espesor * 1.7 * cantidadMetros / 100000);
+    }
+  }
+
+  double precioXmetro(double vprecioTotal, double vcantidad) {
     if (vprecioTotal == null && vcantidad == null) {
       return 1.0;
     } else {
