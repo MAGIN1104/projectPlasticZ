@@ -8,6 +8,7 @@ final EdgeInsetsGeometry margenSimetrico =
 //COLORES
 
 //TEXTOS
+const szfuente = TextStyle(fontSize: 15.0);
 const txtcliche = Text('Incluye precio cliche');
 const txtimpuestos = Text('Incluye inpuestos de ley');
 const InputDecoration txtNombreCuenta =
@@ -16,3 +17,11 @@ const InputDecoration txtNumCuenta =
     InputDecoration(hintText: 'Número de cuenta...');
 const InputDecoration txtNombreCheque =
     InputDecoration(hintText: 'Nombre al cual va el cheque...');
+const txtSelectTipoProducto = Text(
+  'Seleccione tipo de Producto:',
+  style: szfuente,
+);
+const txtSelectTipoBolsa = Text(
+  'Seleccione tipo de bolsa:',
+  style: szfuente,
+);

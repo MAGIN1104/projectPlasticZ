@@ -31,6 +31,8 @@ class Opciones {
     'Banco 8',
   ];
 
+  List<String> menuOptions = ["ExportarPDF", "Enviar", "Nueva Cotizacion"];
+
   List<DropdownMenuItem<String>> getOpcionPago() {
     List<DropdownMenuItem<String>> lista = [];
     tipodePago.forEach((opcion) {
