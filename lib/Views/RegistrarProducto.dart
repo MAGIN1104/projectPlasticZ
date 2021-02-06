@@ -8,7 +8,7 @@ class RegistrarProducto extends StatefulWidget {
 }
 
 class _RegistrarProductoState extends State<RegistrarProducto> {
-  bool bolsa = true, bobina = false;
+  bool bolsa = false, bobina = false;
   bool bbaja = false, balta = false, bpp = false;
   String vancho = '0';
   String vlargo = '0';
@@ -62,8 +62,6 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                               bolsa = false;
                             }
                           });
-                          print('Bolsa: ' + bolsa.toString());
-                          print('Bobina: ' + bobina.toString());
                         }),
                     Text('Bolsa')
                   ],
@@ -78,8 +76,6 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                               bobina = valor;
                               bolsa = false;
                             }
-                            print('Bolsa: ' + bolsa.toString());
-                            print('Bobina: ' + bobina.toString());
                           });
                         }),
                     Text('Bobina')
@@ -271,10 +267,14 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
         ),
       ],
     );
+
+    //TODO: REALIZAR CUERPO DE LAS OPCIONES DE LA BOBINA
     final tipoBobina = Container(
       color: Colors.blue,
       child: Text('Bobina'),
     );
+
+    //De acuerdo a la opcion seleccionada mostrara el contenido
     if (bolsa == true) return tipoBolsa;
     if (bobina == true)
       return tipoBobina;
@@ -290,35 +290,70 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
   }
 
   Widget _resultContent() {
+    double totalKiloBBajo = 0.0, totalKiloBAlto = 0.0, totalKiloBPp = 0.0;
+    double totalPrecio = 0.0;
+    double totalPrecioxBolsa = 0.0;
+    if (bbaja == true && bolsa == true) {
+      totalKiloBBajo = double.parse(operacion
+          .bolsaBajaKilos(double.parse(vancho), double.parse(vlargo),
+              double.parse(vespesor), int.parse(vcbolsas))
+          .toStringAsFixed(2));
+      totalPrecio = double.parse(operacion
+          .precioTotal(totalKiloBBajo, double.parse(vpkilo))
+          .toStringAsFixed(2));
+      totalPrecioxBolsa = double.parse(operacion
+          .precioXbolsa(totalPrecio, double.parse(vcbolsas))
+          .toStringAsFixed(7));
+      print('TOTAL PRECIO >>' + totalPrecioxBolsa.toString());
+    } else if (balta == true && bolsa == true) {
+      totalKiloBAlto = double.parse(operacion
+          .bolsaAKilos(double.parse(vancho), double.parse(vlargo),
+              double.parse(vespesor), int.parse(vcbolsas))
+          .toStringAsFixed(2));
+      totalPrecio = double.parse(operacion
+          .precioTotal(totalKiloBAlto, double.parse(vpkilo))
+          .toStringAsFixed(2));
+      totalPrecioxBolsa = double.parse(operacion
+          .precioXbolsa(totalPrecio, double.parse(vcbolsas))
+          .toStringAsFixed(7));
+    } else if (bpp == true && bolsa == true) {
+      totalKiloBPp = double.parse(operacion
+          .bolsaPPKilos(double.parse(vancho), double.parse(vlargo),
+              double.parse(vespesor), int.parse(vcbolsas))
+          .toStringAsFixed(2));
+      totalPrecio = double.parse(operacion
+          .precioTotal(totalKiloBPp, double.parse(vpkilo))
+          .toStringAsFixed(2));
+      totalPrecioxBolsa = double.parse(operacion
+          .precioXbolsa(totalPrecio, double.parse(vcbolsas))
+          .toStringAsFixed(7));
+    }
+
     final bBaja = Card(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text('BOLSA BAJA', style: szfuente),
-            valueItem('ANCHO            ', vancho),
-            valueItem('LARGO            ', vlargo),
-            valueItem('ESPESOR          ', vespesor),
-            valueItem('CANDIDAD BOLSAS  ', vcbolsas),
-            valueItem('PRECIO KILO      ', vpkilo),
-            Divider(),
-            valueItem(
-                'TOTAL KILOS',
-                (operacion.bolsaBajaKilos(
-                        double.parse(vancho),
-                        double.parse(vlargo),
-                        double.parse(vespesor),
-                        int.parse(vcbolsas)))
-                    .toString()),
-          ],
-        ),
-      ),
-    );
-    return Container(
-      child: bBaja,
-    );
+        child: mostrarDataBolsas('BOLSA BAJA', totalKiloBBajo.toString(),
+            totalPrecio.toString(), totalPrecioxBolsa.toString()));
+    final bAlta = Card(
+        child: mostrarDataBolsas('BOLSA ALTA', totalKiloBAlto.toString(),
+            totalPrecio.toString(), totalPrecioxBolsa.toString()));
+    final bPp = Card(
+        child: mostrarDataBolsas('BOLSA PP', totalKiloBPp.toString(),
+            totalPrecio.toString(), totalPrecioxBolsa.toString()));
+
+    if (bbaja == true && bolsa == true) {
+      return Container(
+        child: bBaja,
+      );
+    } else if (balta == true && bolsa == true) {
+      return Container(
+        child: bAlta,
+      );
+    } else if (bpp == true && bolsa == true) {
+      return Container(
+        child: bPp,
+      );
+    } else {
+      return Container();
+    }
   }
 
   Widget valueItem(String d1, String v1) {
@@ -326,6 +361,42 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [Text(d1), Text(v1)],
+    );
+  }
+
+  Widget mostrarDataBolsas(String tipoBolsa, String totalKilos,
+      String precioTotal, String precioPorBolsa) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(tipoBolsa, style: szfuente),
+          valueItem('ANCHO            ', vancho),
+          valueItem('LARGO            ', vlargo),
+          valueItem('ESPESOR          ', vespesor),
+          valueItem('CANDIDAD BOLSAS  ', vcbolsas),
+          valueItem('PRECIO KILO      ', vpkilo),
+          Divider(),
+          txtTOTAL,
+          valueItem('KILOS', totalKilos),
+          valueItem('PRECIO TOTAL', precioTotal),
+          valueItem('PRECIO c/BOLSA.', precioPorBolsa),
+          SizedBox(height: 20.0),
+          RaisedButton(
+              elevation: 0.0,
+              color: Colors.blue,
+              textColor: Colors.white,
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text('Añadir Item'),
+                SizedBox(width: 20.0),
+                Icon(Icons.add_shopping_cart_rounded)
+              ]),
+              onPressed: () {})
+        ],
+      ),
     );
   }
 }

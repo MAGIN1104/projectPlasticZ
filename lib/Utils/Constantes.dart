@@ -8,7 +8,7 @@ final EdgeInsetsGeometry margenSimetrico =
 //COLORES
 
 //TEXTOS
-const szfuente = TextStyle(fontSize: 15.0);
+const szfuente = TextStyle(fontWeight: FontWeight.bold, fontSize: 15);
 const txtcliche = Text('Incluye precio cliche');
 const txtimpuestos = Text('Incluye inpuestos de ley');
 const InputDecoration txtNombreCuenta =
@@ -24,4 +24,8 @@ const txtSelectTipoProducto = Text(
 const txtSelectTipoBolsa = Text(
   'Seleccione tipo de bolsa:',
   style: szfuente,
+);
+const txtTOTAL = Text(
+  'TOTAL',
+  style: TextStyle(fontWeight: FontWeight.bold),
 );
