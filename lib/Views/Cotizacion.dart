@@ -13,33 +13,16 @@ class _CotizacionViewState extends State<CotizacionView> {
   Opciones listaOpciones = new Opciones();
   Operaciones operacion = new Operaciones();
   bool bolsa = false, bobina = false;
-  List<ModeloBolsa> itemBolsa = [];
 
   @override
   Widget build(BuildContext context) {
-    // final bolsaValue = DBProvider.db.getBolsa();
-    // print(bolsaValue);
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Cotización'),
           actions: [_menuOption()],
         ),
-        body: Text('DATOS...'),
-
         //TODO: MOSTRAR VALORES REGISTRADOS
-
-        // Text('Data..!!!'),
-        // FutureBuilder(
-        //   future: bolsaValue,
-        //   builder: (context, AsyncSnapshot<List<ModeloBolsa>> snapshot) {
-        //     if (snapshot.hasData) {
-        //       return Text('DATA...!!!!');
-        //     } else {
-        //       return Text('NO HAY DATA...!!!');
-        //     }
-        //   },
-        // ),
+        body: Text('Data'),
         floatingActionButton: FloatingActionButton(
           child: Icon(
             Icons.add,

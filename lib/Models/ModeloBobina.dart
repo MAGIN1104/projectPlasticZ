@@ -1,10 +1,3 @@
-import 'dart:convert';
-
-ModeloBobina modeloBobinaFromJson(String str) =>
-    ModeloBobina.fromJson(json.decode(str));
-
-String modeloBobinaToJson(ModeloBobina data) => json.encode(data.toJson());
-
 class ModeloBobina {
   ModeloBobina({
     this.id,
@@ -55,8 +48,4 @@ class ModeloBobina {
         "precioTotal": precioTotal,
         "precioPorMetro": precioPorMetro,
       };
-  @override
-  String toString() {
-    return "Bobina{name $producto, tipoProducto $tipoProducto,ancho $ancho,largo, espesor $espesor, cantidad $cantidad, precio $precio tkilos $tkilosPorRollo, precioTotal $precioTotal, precioPorBolsa $precioPorMetro}";
-  }
 }

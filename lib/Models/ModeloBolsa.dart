@@ -1,10 +1,3 @@
-import 'dart:convert';
-
-ModeloBolsa modeloBolsaFromJson(String str) =>
-    ModeloBolsa.fromJson(json.decode(str));
-
-String modeloBolsaToJson(ModeloBolsa data) => json.encode(data.toJson());
-
 class ModeloBolsa {
   ModeloBolsa({
     this.id,
@@ -59,8 +52,4 @@ class ModeloBolsa {
         "precioTotal": precioTotal,
         "precioPorBolsa": precioPorBolsa,
       };
-  @override
-  String toString() {
-    return "Bolsas{name $producto, tipoProducto $tipoProducto,ancho $ancho,largo $largo, espesor $espesor, cantidad $cantidad, precio $precio tkilos $tkilos, precioTotal $precioTotal, precioPorBolsa $precioPorBolsa}";
-  }
 }
