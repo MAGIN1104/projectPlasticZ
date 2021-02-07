@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
+import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
 import 'package:plasticz/Utils/Operaciones.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,7 +23,43 @@ class _CotizacionViewState extends State<CotizacionView> {
           actions: [_menuOption()],
         ),
         //TODO: MOSTRAR VALORES REGISTRADOS
-        body: Text('Data'),
+        body: FutureBuilder(
+          future: DBProvider.db.getBolsa(),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<ModeloBolsa>> snapshot) {
+            final resp = snapshot.data;
+            print('Cantidad de bolsas - ${resp.length}');
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: resp.length,
+                itemBuilder: (_, i) {
+                  return Card(
+                    child: Container(
+                      padding: padingCard,
+                      child: ListTile(
+                        title: Text('${resp[i].producto}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${resp[i].tipoProducto}'),
+                            Divider(),
+                            Text('Ancho: ${resp[i].ancho}'),
+                            Text('Largo: ${resp[i].largo}'),
+                            Text('Espesor: ${resp[i].espesor}'),
+                            Text('Cantidad: ${resp[i].cantidad}'),
+                            Text('Precio por Bolsa: ${resp[i].precioPorBolsa}'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Text('No hay data...!!');
+            }
+          },
+        ),
         floatingActionButton: FloatingActionButton(
           child: Icon(
             Icons.add,
