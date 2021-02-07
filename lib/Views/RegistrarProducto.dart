@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Operaciones.dart';
 
@@ -547,23 +548,23 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
 
     //CONDICIONES PARA MOSTRAR RESPUESTAS
     //DEPENDIENDO BOLSA O BOBINA
-    if (bbaja == true && bolsa == true) {
+    if (bbaja && bolsa) {
       return Container(
         child: bBaja,
       );
-    } else if (balta == true && bolsa == true) {
+    } else if (balta && bolsa) {
       return Container(
         child: bAlta,
       );
-    } else if (bpp == true && bolsa == true) {
+    } else if (bpp && bolsa) {
       return Container(
         child: bPp,
       );
-    } else if (bobPEBD == true && bobina == true) {
+    } else if (bobPEBD && bobina) {
       return Container(
         child: _boPebd,
       );
-    } else if (bobPP == true && bobina == true) {
+    } else if (bobPP && bobina) {
       return Container(
         child: _boPP,
       );
@@ -612,7 +613,22 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 SizedBox(width: 20.0),
                 Icon(Icons.add_shopping_cart_rounded)
               ]),
-              onPressed: () {})
+              onPressed: () async {
+                final bolsaDB = await DBProvider.db.insertBolsa(ModeloBolsa(
+                  producto: 'BOLSA',
+                  tipoProducto: tipoBolsa,
+                  ancho: double.parse(vancho),
+                  largo: double.parse(vlargo),
+                  espesor: double.parse(vespesor),
+                  cantidad: int.parse(vcbolsas),
+                  precio: double.parse(vpkilo),
+                  tkilos: double.parse(totalKilos),
+                  precioTotal: double.parse(precioTotal),
+                  precioPorBolsa: double.parse(precioPorBolsa),
+                ));
+                print(bolsaDB);
+                Navigator.pushNamed(context, '/cotizacion');
+              })
         ],
       ),
     );
