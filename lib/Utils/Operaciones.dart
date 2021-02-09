@@ -35,7 +35,12 @@ class Operaciones {
     }
   }
 
-  double precioXbolsa(double vprecioTotal, double vcantidad) {
+  // double precioTotalBobina(){
+
+  // }
+
+  //Precion por unidad
+  double precioXUnidad(double vprecioTotal, double vcantidad) {
     if (vprecioTotal == null && vcantidad == null) {
       return 1.0;
     } else {
@@ -43,27 +48,27 @@ class Operaciones {
     }
   }
 
-  double kilosXRolloPEBD(double ancho, double espesor, double cantidadMetros) {
-    if (ancho == null && espesor == null && cantidadMetros == null) {
+  double kilosXRolloPEBD(double ancho, double espesor, double largo) {
+    if (ancho == null && espesor == null && largo == null) {
       return 1.0;
     } else {
-      return (ancho * espesor * 1.848 * cantidadMetros / 100000);
+      return (ancho * espesor * 1.848 * largo / 100000);
     }
   }
 
-  double kilosXRolloPP(double ancho, double espesor, double cantidadMetros) {
-    if (ancho == null && espesor == null && cantidadMetros == null) {
+  double kilosXRolloPEAD(double ancho, double espesor, double largo) {
+    if (ancho == null && espesor == null && largo == null) {
       return 1.0;
     } else {
-      return (ancho * espesor * 1.7 * cantidadMetros / 100000);
+      return (ancho * espesor * 1.86 * largo / 100000);
     }
   }
 
-  double precioXmetro(double vprecioTotal, double vcantidad) {
-    if (vprecioTotal == null && vcantidad == null) {
+  double kilosXRolloPP(double ancho, double espesor, double largo) {
+    if (ancho == null && espesor == null && largo == null) {
       return 1.0;
     } else {
-      return vprecioTotal / vcantidad;
+      return (ancho * espesor * 1.7 * largo / 100000);
     }
   }
 }

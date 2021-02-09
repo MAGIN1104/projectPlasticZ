@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:plasticz/Models/ModeloBobina.dart';
-export 'package:plasticz/Models/ModeloBobina.dart';
-import 'package:plasticz/Models/ModeloBolsa.dart';
-export 'package:plasticz/Models/ModeloBolsa.dart';
+import 'package:plasticz/Models/ProductModel.dart';
+export 'package:plasticz/Models/ProductModel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -24,65 +22,40 @@ class DBProvider {
     final path = join(documentsDirectory.path, 'ProductoDB.db');
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      await db.execute('CREATE TABLE Bobinas('
+      await db.execute('CREATE TABLE Producto('
           'id INTEGER PRIMARY KEY AUTOINCREMENT,'
           'producto TEXT,'
           'tipoProducto TEXT,'
-          'ancho DOUBLE(10000,8),'
-          'espesor DOUBLE(10000,8),'
-          'cantidad INTEGER,'
-          'precio DOUBLE(10000,8),'
-          'tkilosPorRollo DOUBLE(10000,8),'
-          'precioTotal DOUBLE(10000,8),'
-          'precioPorMetro DOUBLE(10000,8)'
-          ')');
-      await db.execute('CREATE TABLE Bolsas('
-          'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-          'producto TEXT,'
-          'tipoProducto TEXT,'
+          'color TEXT,'
           'ancho DOUBLE(10000,8),'
           'largo DOUBLE(10000,8),'
           'espesor DOUBLE(10000,8),'
           'cantidad INTEGER,'
-          'precio DOUBLE(10000,8),'
+          'unidad DOUBLE(10000,8),'
           'tkilos DOUBLE(10000,8),'
-          'precioTotal DOUBLE(10000,8),'
-          'precioPorBolsa DOUBLE(10000,8)'
+          'precioUnitario DOUBLE(10000,8),'
+          'precioRollo DOUBLE(10000,8),'
+          'precioTotal DOUBLE(10000,8)'
           ')');
     });
   }
 
-  //Insertar Bolsa
-  Future<int> insertBolsa(ModeloBolsa bolsa) async {
+  //Insertar Producto
+  Future<int> insertarProducto(ProductModel productItem) async {
     final db = await dbProducto;
-    final resp = await db.insert('Bolsas', bolsa.toJson());
+    final resp = await db.insert('Producto', productItem.toJson());
     return resp;
   }
 
-  //Insertar Bolsa
-  Future<int> insertBobina(ModeloBobina bobina) async {
-    final db = await dbProducto;
-    final resp = await db.insert('Bobinas', bobina.toJson());
-    return resp;
-  }
+  //Borrar Producto
 
-  //Obtener Producto Bolsa
-  Future<List<ModeloBolsa>> getBolsa() async {
+  //Obtener todos los Productos
+  Future<List<ProductModel>> getAllProduct() async {
     final db = await dbProducto;
-    final resp = await db.query('Bolsas');
+    final resp = await db.query('Producto');
     if (resp.isEmpty)
       return [];
     else
-      return resp.map((json) => ModeloBolsa.fromJson(json)).toList();
-  }
-
-  //Obtener Producto Bobina
-  Future<List<ModeloBobina>> getBobina() async {
-    final db = await dbProducto;
-    final resp = await db.query('Bobinas');
-    if (resp.isEmpty)
-      return [];
-    else
-      return resp.map((json) => ModeloBobina.fromJson(json)).toList();
+      return resp.map((json) => ProductModel.fromJson(json)).toList();
   }
 }

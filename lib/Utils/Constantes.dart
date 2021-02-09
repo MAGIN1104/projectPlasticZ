@@ -23,10 +23,7 @@ const txtSelectTipoProducto = Text(
   'Seleccione tipo de Producto:',
   style: szfuente,
 );
-const txtSelectTipoBolsa = Text(
-  'Seleccione tipo de bolsa:',
-  style: szfuente,
-);
+
 const txtSelectTipoBobina = Text(
   'Seleccione tipo de Bobina:',
   style: szfuente,
@@ -40,3 +37,7 @@ const txtIngreseDatos = Text(
   'Ingrese datos:',
   style: TextStyle(fontSize: 15.0),
 );
+
+//TEXTURA CARDS
+const estiloTitulo = TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold);
+const descripcionItemStyle = TextStyle(fontWeight: FontWeight.bold);

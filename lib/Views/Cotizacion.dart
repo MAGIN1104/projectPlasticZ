@@ -3,7 +3,6 @@ import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
 import 'package:plasticz/Utils/Operaciones.dart';
-import 'package:sqflite/sqflite.dart';
 
 class CotizacionView extends StatefulWidget {
   @override
@@ -17,57 +16,81 @@ class _CotizacionViewState extends State<CotizacionView> {
 
   @override
   Widget build(BuildContext context) {
+    final productos = DBProvider.db.getAllProduct();
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Cotización'),
-          actions: [_menuOption()],
-        ),
-        //TODO: MOSTRAR VALORES REGISTRADOS
-        body: FutureBuilder(
-          future: DBProvider.db.getBolsa(),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<ModeloBolsa>> snapshot) {
+      appBar: AppBar(
+        title: Text('Cotización'),
+        actions: [_menuOption()],
+      ),
+      //TODO: MOSTRAR VALORES REGISTRADOS
+      body: FutureBuilder(
+        future: productos,
+        builder:
+            (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+          if (snapshot.hasData) {
             final resp = snapshot.data;
-            print('Cantidad de bolsas - ${resp.length}');
-            if (snapshot.hasData) {
+            if (resp.isEmpty) {
+              return Center(child: Text('Inserte nuevo item....'));
+            } else {
               return ListView.builder(
                 itemCount: resp.length,
                 itemBuilder: (_, i) {
-                  return Card(
-                    child: Container(
-                      padding: padingCard,
-                      child: ListTile(
-                        title: Text('${resp[i].producto}'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${resp[i].tipoProducto}'),
-                            Divider(),
-                            Text('Ancho: ${resp[i].ancho}'),
-                            Text('Largo: ${resp[i].largo}'),
-                            Text('Espesor: ${resp[i].espesor}'),
-                            Text('Cantidad: ${resp[i].cantidad}'),
-                            Text('Precio por Bolsa: ${resp[i].precioPorBolsa}'),
-                          ],
+                  return Dismissible(
+                    key: UniqueKey(),
+                    // onDismissed: (DismissDirection direccion) {
+                    //   //TODO: IMPLEMENTAR METODO BORRAR
+                    // },
+                    child: Card(
+                      child: ExpansionTile(
+                        title: Text(
+                          '${resp[i].producto}',
+                          style: estiloTitulo,
                         ),
+                        subtitle: Text('${resp[i].tipoProducto}'),
+                        children: [
+                          Container(
+                            padding: margenSimetrico,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _detailsItem('Ancho', '${resp[i].ancho}'),
+                                _detailsItem('Largo', '${resp[i].largo}'),
+                                _detailsItem('Espesor', '${resp[i].espesor}'),
+                                _detailsItem('Cantidad', '${resp[i].cantidad}'),
+                                Divider(),
+                                Text('TOTAL', style: descripcionItemStyle),
+                                _detailsItem('Kilos', '${resp[i].tkilos}'),
+                                _detailsItem('Precio c/Bolsa',
+                                    '${resp[i].precioUnitario}'),
+                                _detailsItem(
+                                    'Precio Total', '${resp[i].precioTotal}'),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
               );
-            } else {
-              return Text('No hay data...!!');
             }
-          },
+          } else {
+            return Center(
+              child: Text('Insterte nuevos items.'),
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, '/insertarProducto');
-          },
-        ));
+        onPressed: () {
+          Navigator.pushNamed(context, '/insertarProducto');
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   //POPUP DE ALERTA
@@ -150,5 +173,15 @@ class _CotizacionViewState extends State<CotizacionView> {
     } else {
       print('Nueva Cotización');
     }
+  }
+
+  Widget _detailsItem(String detalle, String valor) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(detalle, style: descripcionItemStyle),
+        Text(valor),
+      ],
+    );
   }
 }

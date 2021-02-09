@@ -11,20 +11,29 @@ class RegistrarProducto extends StatefulWidget {
 class _RegistrarProductoState extends State<RegistrarProducto> {
   bool bolsa = false, bobina = false;
   bool bbaja = false, balta = false, bpp = false;
-  bool bobPEBD = false, bobPP = false;
+  bool bobPEBD = false, bobPEAD = false, bobPP = false;
 
-  //Datos Iniciales Bolsa
-  String vancho = '0';
-  String vlargo = '0';
-  String vespesor = '0';
-  String vcbolsas = '0';
-  String vpkilo = '0';
+  //Datos Iniciales Producto
+  String vproducto = "";
+  String vunidad = "";
+  String vtipoproducto = "";
+  String vancho = "0";
+  String vlargo = "0";
+  String vespesor = "0";
+  String vcantidad = "0";
+  String vpkilo = "0";
+  String vcolor = "";
+  String vcunidad = "0";
+  String vaunidadMedida = "";
 
-  //Datos iniciales Bobina
-  String vanchoBobina = '0';
-  String vespesorBobina = '0';
-  String vCanMetros = '0';
-  String vpkiloBobina = '0';
+  double precioRollo = 0;
+
+  final anchoController = TextEditingController();
+  final largoController = TextEditingController();
+  final espesorController = TextEditingController();
+  final cantidadController = TextEditingController();
+  final pkiloController = TextEditingController();
+  final colorController = TextEditingController();
 
   Operaciones operacion = new Operaciones();
 
@@ -69,10 +78,17 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                         onChanged: (valor) {
                           setState(() {
                             if (valor == true) {
+                              vproducto = "BOLSA";
+                              vunidad = "BOLSAS";
+                              vaunidadMedida = "(Bolsas)";
                               bolsa = valor;
                               bobina = false;
-                            } else {
-                              bolsa = false;
+                              anchoController.clear();
+                              largoController.clear();
+                              espesorController.clear();
+                              cantidadController.clear();
+                              pkiloController.clear();
+                              colorController.clear();
                             }
                           });
                         }),
@@ -86,8 +102,17 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                         onChanged: (valor) {
                           setState(() {
                             if (valor == true) {
+                              vproducto = "BOBINA";
+                              vunidad = "ROLLOS";
+                              vaunidadMedida = "(Metros)";
                               bobina = valor;
                               bolsa = false;
+                              anchoController.clear();
+                              largoController.clear();
+                              espesorController.clear();
+                              cantidadController.clear();
+                              pkiloController.clear();
+                              colorController.clear();
                             }
                           });
                         }),
@@ -103,62 +128,19 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
   }
 
   Widget _bodyContent(bool bolsa, bool bobina) {
-    final tipoBolsa = Column(
+    final tipoProducto = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        txtSelectTipoBolsa,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            checkOption(
-              'Bolsa Baja',
-              Checkbox(
-                  value: bbaja,
-                  onChanged: (val) {
-                    setState(() {
-                      if (val == true) {
-                        bbaja = val;
-                        balta = false;
-                        bpp = false;
-                      } else {
-                        bbaja = false;
-                      }
-                    });
-                  }),
-            ),
-            checkOption(
-              'Bolsa Alta',
-              Checkbox(
-                  value: balta,
-                  onChanged: (val) {
-                    setState(() {
-                      if (val == true) {
-                        bbaja = false;
-                        balta = val;
-                        bpp = false;
-                      }
-                    });
-                  }),
-            ),
-            checkOption(
-              'Bolsa PP',
-              Checkbox(
-                  value: bpp,
-                  onChanged: (val) {
-                    setState(() {
-                      if (val == true) {
-                        bbaja = false;
-                        balta = false;
-                        bpp = val;
-                      }
-                    });
-                  }),
-            )
-          ],
+        Text(
+          'Seleccione tipo de ${vproducto.toLowerCase()}:',
+          style: szfuente,
         ),
+        _tipoProducto(),
         SizedBox(height: 30.0),
         txtIngreseDatos,
         SizedBox(height: 15.0),
+
+        //ANCHO
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -167,6 +149,7 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 width: 150.0,
                 child: TextFormField(
+                    controller: anchoController,
                     onChanged: (valor) {
                       setState(() {
                         if (valor.isEmpty) {
@@ -179,10 +162,12 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 55.55 ',
+                      hintText: 'Ej. 12.3 ',
                     ))),
           ],
         ),
+
+        //LARGO
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -191,6 +176,7 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 width: 150.0,
                 child: TextFormField(
+                    controller: largoController,
                     onChanged: (valor) {
                       setState(() {
                         if (valor.isEmpty) {
@@ -202,10 +188,12 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 55.55 ',
+                      hintText: 'Ej. 12.3',
                     ))),
           ],
         ),
+
+        // ESPESOR
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -214,6 +202,7 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 width: 150.0,
                 child: TextFormField(
+                    controller: espesorController,
                     onChanged: (valor) {
                       setState(() {
                         if (valor.isEmpty) {
@@ -225,33 +214,38 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 45.55 ',
+                      hintText: 'Ej. 12.3',
                     ))),
           ],
         ),
+
+        //CANTIDAD
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('CANT. BOLSAS'),
+            Text('CANTIDAD'),
             Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 width: 150.0,
                 child: TextFormField(
+                    controller: cantidadController,
                     onChanged: (valor) {
                       setState(() {
                         if (valor.isEmpty) {
-                          vcbolsas = "0";
+                          vcantidad = "0";
                         } else {
-                          vcbolsas = valor;
+                          vcantidad = valor;
                         }
                       });
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 123 ',
+                      hintText: 'Ej. 12.3',
                     ))),
           ],
         ),
+
+        //PRECIO KILO
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -260,6 +254,7 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 width: 150.0,
                 child: TextFormField(
+                    controller: pkiloController,
                     onChanged: (valor) {
                       setState(() {
                         if (valor.isEmpty) {
@@ -271,155 +266,33 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 120.55 ',
-                    ))),
-          ],
-        ),
-      ],
-    );
-
-    //TODO: REALIZAR CUERPO DE LAS OPCIONES DE LA BOBINA
-    final tipoBobina = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        txtSelectTipoBobina,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            checkOption(
-                'Bobina - PEBD',
-                Checkbox(
-                    value: bobPEBD,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value == true) {
-                          bobPEBD = value;
-                          bobPP = false;
-                        } else {
-                          bobPEBD = false;
-                        }
-                      });
-                    })),
-            checkOption(
-                'Bobina - PP',
-                Checkbox(
-                    value: bobPP,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value == true) {
-                          bobPP = value;
-                          bobPEBD = false;
-                        } else {
-                          bobPP = false;
-                        }
-                      });
-                    })),
-          ],
-        ),
-        SizedBox(height: 30),
-        txtIngreseDatos,
-        SizedBox(height: 15),
-
-        //ANCHO
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('ANCHO (cm)'),
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                width: 150.0,
-                child: TextFormField(
-                    onChanged: (valor) {
-                      setState(() {
-                        if (valor.isEmpty) {
-                          vanchoBobina = "0";
-                        } else {
-                          vanchoBobina = valor;
-                        }
-                      });
-                      print(vanchoBobina);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Ej. 55.55 ',
+                      hintText: 'Ej. 12.3',
                     ))),
           ],
         ),
 
-        //ESPESOR
+        //COLOR
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('ESPESOR (cm)'),
+            Text('COLOR'),
             Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 width: 150.0,
                 child: TextFormField(
+                    controller: colorController,
                     onChanged: (valor) {
                       setState(() {
                         if (valor.isEmpty) {
-                          vespesorBobina = "0";
+                          vcolor = " ";
                         } else {
-                          vespesorBobina = valor;
+                          vcolor = valor;
                         }
                       });
-                      print(vespesorBobina);
                     },
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 65.55 ',
-                    ))),
-          ],
-        ),
-
-        //CANTIDAD EN METROS
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('CANTIDAD (m)'),
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                width: 150.0,
-                child: TextFormField(
-                    onChanged: (valor) {
-                      setState(() {
-                        if (valor.isEmpty) {
-                          vCanMetros = "0";
-                        } else {
-                          vCanMetros = valor;
-                        }
-                      });
-                      print(vCanMetros);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Ej. 100.55 ',
-                    ))),
-          ],
-        ),
-
-        //PRECIO POR KILO
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('PRECIO p/KILO'),
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                width: 150.0,
-                child: TextFormField(
-                    onChanged: (valor) {
-                      setState(() {
-                        if (valor.isEmpty) {
-                          vpkiloBobina = "0";
-                        } else {
-                          vpkiloBobina = valor;
-                        }
-                      });
-                      print(vpkiloBobina);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Ej. 110.55 ',
+                      hintText: 'Ej. Rojo',
                     ))),
           ],
         ),
@@ -427,11 +300,10 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
     );
 
     //De acuerdo a la opcion seleccionada mostrara el contenido
-    if (bolsa == true) return tipoBolsa;
-    if (bobina == true)
-      return tipoBobina;
+    if (bolsa || bobina)
+      return tipoProducto;
     else
-      return Container();
+      return Center(child: Text('SELECCIONE PRODUCTO'));
   }
 
   //CheckOption
@@ -442,134 +314,102 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
   }
 
   Widget _resultContent() {
-    //VARIABLES BOLSA
-    double totalKiloBBajo = 0.0, totalKiloBAlto = 0.0, totalKiloBPp = 0.0;
-    double totalPrecio = 0.0;
-    double totalPrecioxBolsa = 0.0;
+    double vtotalkilo = 0;
+    double totalPrecioxUnidad = 0;
+    double totalPrecio = 0;
 
-    //VARIABLES PARA BOBINA
-    double totalKilosXRolloPEBD = 0.0;
-    double totalKilosXRolloPP = 0.0;
-    double totalPrecioBobina = 0.0;
-    double totalPrecioPorMetro = 0.0;
+    //TARJETAS DE LOS RESULTADOS DE LAS BOLSAS
 
     //CONDICION PARA OPERACION DE LAS BOLSAS
-    if (bbaja == true && bolsa == true) {
-      totalKiloBBajo = double.parse(operacion
+    if (bbaja && bolsa) {
+      vtotalkilo = double.parse(operacion
           .bolsaBajaKilos(double.parse(vancho), double.parse(vlargo),
-              double.parse(vespesor), int.parse(vcbolsas))
-          .toStringAsFixed(2));
+              double.parse(vespesor), int.parse(vcantidad))
+          .toStringAsFixed(4));
       totalPrecio = double.parse(operacion
-          .precioTotal(totalKiloBBajo, double.parse(vpkilo))
-          .toStringAsFixed(2));
-      totalPrecioxBolsa = double.parse(operacion
-          .precioXbolsa(totalPrecio, double.parse(vcbolsas))
+          .precioTotal(vtotalkilo, double.parse(vpkilo))
+          .toStringAsFixed(3));
+      totalPrecioxUnidad = double.parse(operacion
+          .precioXUnidad(totalPrecio, double.parse(vcantidad))
           .toStringAsFixed(7));
-    } else if (balta == true && bolsa == true) {
-      totalKiloBAlto = double.parse(operacion
+    } else if (balta && bolsa) {
+      vtotalkilo = double.parse(operacion
           .bolsaAKilos(double.parse(vancho), double.parse(vlargo),
-              double.parse(vespesor), int.parse(vcbolsas))
-          .toStringAsFixed(2));
+              double.parse(vespesor), int.parse(vcantidad))
+          .toStringAsFixed(4));
       totalPrecio = double.parse(operacion
-          .precioTotal(totalKiloBAlto, double.parse(vpkilo))
-          .toStringAsFixed(2));
-      totalPrecioxBolsa = double.parse(operacion
-          .precioXbolsa(totalPrecio, double.parse(vcbolsas))
+          .precioTotal(vtotalkilo, double.parse(vpkilo))
+          .toStringAsFixed(3));
+      totalPrecioxUnidad = double.parse(operacion
+          .precioXUnidad(totalPrecio, double.parse(vcantidad))
           .toStringAsFixed(7));
-    } else if (bpp == true && bolsa == true) {
-      totalKiloBPp = double.parse(operacion
+    } else if (bpp && bolsa) {
+      vtotalkilo = double.parse(operacion
           .bolsaPPKilos(double.parse(vancho), double.parse(vlargo),
-              double.parse(vespesor), int.parse(vcbolsas))
-          .toStringAsFixed(2));
+              double.parse(vespesor), int.parse(vcantidad))
+          .toStringAsFixed(4));
       totalPrecio = double.parse(operacion
-          .precioTotal(totalKiloBPp, double.parse(vpkilo))
-          .toStringAsFixed(2));
-      totalPrecioxBolsa = double.parse(operacion
-          .precioXbolsa(totalPrecio, double.parse(vcbolsas))
+          .precioTotal(vtotalkilo, double.parse(vpkilo))
+          .toStringAsFixed(3));
+      totalPrecioxUnidad = double.parse(operacion
+          .precioXUnidad(totalPrecio, double.parse(vcantidad))
           .toStringAsFixed(7));
-    } else {
-      totalKiloBBajo = 0.0;
-      totalKiloBAlto = 0.0;
-      totalKiloBPp = 0.0;
-      totalPrecio = 0.0;
-      totalPrecioxBolsa = 0.0;
     }
 
     //CONDICION PARA OPERACION DE LAS BOBINAS
-    if (bobPEBD == true && bobina == true) {
-      totalKilosXRolloPEBD = double.parse(operacion
-          .kilosXRolloPEBD(double.parse(vanchoBobina),
-              double.parse(vespesorBobina), double.parse(vCanMetros))
-          .toStringAsFixed(2));
-      totalPrecioBobina = double.parse(operacion
-          .precioTotal(totalKilosXRolloPEBD, double.parse(vpkiloBobina))
+    if (bobPEBD && bobina) {
+      vtotalkilo = double.parse(operacion
+          .kilosXRolloPEBD(double.parse(vancho), double.parse(vespesor),
+              double.parse(vlargo))
+          .toStringAsFixed(4));
+      precioRollo = double.parse(operacion
+          .precioTotal(vtotalkilo, double.parse(vpkilo))
           .toStringAsFixed(3));
-      totalPrecioPorMetro = double.parse(operacion
-          .precioXmetro(totalPrecioBobina, double.parse(vCanMetros))
+      totalPrecioxUnidad = double.parse(operacion
+          .precioXUnidad(precioRollo, double.parse(vlargo))
           .toStringAsFixed(7));
-    } else if (bobPP == true && bobina == true) {
-      totalKilosXRolloPP = double.parse(operacion
-          .kilosXRolloPP(double.parse(vanchoBobina),
-              double.parse(vespesorBobina), double.parse(vCanMetros))
-          .toStringAsFixed(2));
-      totalPrecioBobina = double.parse(operacion
-          .precioTotal(totalKilosXRolloPP, double.parse(vpkiloBobina))
+      totalPrecio = double.parse(operacion
+          .precioTotal(precioRollo, double.parse(vcantidad))
           .toStringAsFixed(3));
-      totalPrecioPorMetro = double.parse(operacion
-          .precioXmetro(totalPrecioBobina, double.parse(vCanMetros))
+    } else if (bobPP && bobina) {
+      vtotalkilo = double.parse(operacion
+          .kilosXRolloPP(double.parse(vancho), double.parse(vespesor),
+              double.parse(vlargo))
+          .toStringAsFixed(4));
+      precioRollo = double.parse(operacion
+          .precioTotal(vtotalkilo, double.parse(vpkilo))
+          .toStringAsFixed(3));
+      totalPrecioxUnidad = double.parse(operacion
+          .precioXUnidad(precioRollo, double.parse(vlargo))
           .toStringAsFixed(7));
-    } else {
-      totalKilosXRolloPEBD = 0.0;
-      totalKilosXRolloPP = 0.0;
-      totalPrecioBobina = 0.0;
-      totalPrecioPorMetro = 0.0;
+      totalPrecio = double.parse(operacion
+          .precioTotal(precioRollo, double.parse(vcantidad))
+          .toStringAsFixed(3));
+    } else if (bobPEAD && bobina) {
+      vtotalkilo = double.parse(operacion
+          .kilosXRolloPP(double.parse(vancho), double.parse(vespesor),
+              double.parse(vlargo))
+          .toStringAsFixed(4));
+      precioRollo = double.parse(operacion
+          .precioTotal(vtotalkilo, double.parse(vpkilo))
+          .toStringAsFixed(3));
+      totalPrecioxUnidad = double.parse(operacion
+          .precioXUnidad(precioRollo, double.parse(vlargo))
+          .toStringAsFixed(7));
+      totalPrecio = double.parse(operacion
+          .precioTotal(precioRollo, double.parse(vcantidad))
+          .toStringAsFixed(3));
     }
 
-    //TARJETAS DE LOS RESULTADOS DE LAS BOLSAS
-    final bBaja = Card(
-        child: mostrarDataBolsas('BOLSA BAJA', totalKiloBBajo.toString(),
-            totalPrecio.toString(), totalPrecioxBolsa.toString()));
-    final bAlta = Card(
-        child: mostrarDataBolsas('BOLSA ALTA', totalKiloBAlto.toString(),
-            totalPrecio.toString(), totalPrecioxBolsa.toString()));
-    final bPp = Card(
-        child: mostrarDataBolsas('BOLSA PP', totalKiloBPp.toString(),
-            totalPrecio.toString(), totalPrecioxBolsa.toString()));
-
-    //TARJETAS DE LOS RESULTADOS DE LAS BOBINAS
-    final _boPebd = Card(
-      child: mostrarDataBobina('BOBINA - PEBD', totalKilosXRolloPEBD.toString(),
-          totalPrecioBobina.toString(), totalPrecioPorMetro.toString()),
-    );
-    final _boPP = Card(
-      child: mostrarDataBobina('BOBINA - PP', totalKilosXRolloPP.toString(),
-          totalPrecioBobina.toString(), totalPrecioPorMetro.toString()),
-    );
-
-    //CONDICIONES PARA MOSTRAR RESPUESTAS
-    //DEPENDIENDO BOLSA O BOBINA
-    if (bbaja && bolsa) {
-      return Container(
-        child: bBaja,
-      );
-    } else if (balta && bolsa) {
-      return Container(
-        child: bAlta,
-      );
-    } else if (bpp && bolsa) {
-      return Container(
-        child: bPp,
-      );
-    } else if (bobPEBD && bobina) {
-      return Container(
-        child: _boPebd,
-      );
-    } else if (bobPP && bobina) {
-      return Container(
-        child: _boPP,
-      );
+    if (bobPEAD || bobPEBD || bobPP || bbaja || balta || bpp) {
+      return Card(
+          child: mostrarResultProducto(
+              '$vproducto - $vtipoproducto',
+              vtotalkilo.toString(),
+              totalPrecio.toString(),
+              totalPrecioxUnidad.toString()));
     } else {
-      return Container();
+      return Text('');
     }
   }
 
@@ -582,26 +422,29 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
     );
   }
 
-  //WIDGET PARA MOSTRAR TARJETA FINAL DE LOS DATOS DE LA BOLSA
-  Widget mostrarDataBolsas(String tipoBolsa, String totalKilos,
-      String precioTotal, String precioPorBolsa) {
+  //WIDGET PARA MOSTRAR TARJETA FINAL DE LOS DATOS DE LA BOBINA
+  Widget mostrarResultProducto(String tipodeproducto, String totalKilos,
+      String precioTotal, String precioUnitario) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(tipoBolsa, style: szfuente),
-          valueItem('ANCHO            ', vancho),
-          valueItem('LARGO            ', vlargo),
-          valueItem('ESPESOR          ', vespesor),
-          valueItem('CANDIDAD BOLSAS  ', vcbolsas),
-          valueItem('PRECIO KILO      ', vpkilo),
+          Text(tipodeproducto, style: szfuente),
+          valueItem('ANCHO (cm)            ', vancho),
+          valueItem('ESPESOR (µm)          ', vespesor),
+          valueItem('LARGO (cm)            ', vlargo),
+          valueItem('CANDIDAD', vcantidad),
+          valueItem('PRECIO KILO (Bs)      ', vpkilo),
           Divider(),
           txtTOTAL,
-          valueItem('KILOS', totalKilos),
-          valueItem('PRECIO TOTAL', precioTotal),
-          valueItem('PRECIO c/BOLSA.', precioPorBolsa),
+          valueItem('COLOR', vcolor.toUpperCase()),
+          valueItem('EQ. APROX (Kg)', totalKilos),
+          valueItem('PRECIO UNITARIO $vaunidadMedida', precioUnitario),
+          // valueItem('PRECIO ROLLO', ),
+          _precioRollo(),
+          valueItem('PRECIO TOTAL (Bs)', precioTotal),
           SizedBox(height: 20.0),
           RaisedButton(
               elevation: 0.0,
@@ -614,59 +457,166 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 Icon(Icons.add_shopping_cart_rounded)
               ]),
               onPressed: () async {
-                final bolsaDB = await DBProvider.db.insertBolsa(ModeloBolsa(
-                  producto: 'BOLSA',
-                  tipoProducto: tipoBolsa,
-                  ancho: double.parse(vancho),
-                  largo: double.parse(vlargo),
-                  espesor: double.parse(vespesor),
-                  cantidad: int.parse(vcbolsas),
-                  precio: double.parse(vpkilo),
-                  tkilos: double.parse(totalKilos),
-                  precioTotal: double.parse(precioTotal),
-                  precioPorBolsa: double.parse(precioPorBolsa),
-                ));
-                print(bolsaDB);
-                Navigator.pushNamed(context, '/cotizacion');
+                if (bolsa) {
+                  final productoDB = await DBProvider.db.insertarProducto(
+                      ProductModel(
+                          producto: vproducto,
+                          tipoProducto: vtipoproducto,
+                          color: vcolor.toUpperCase(),
+                          ancho: double.parse(vancho),
+                          largo: double.parse(vlargo),
+                          espesor: double.parse(vespesor),
+                          cantidad: int.parse(vcantidad),
+                          unidad: vunidad,
+                          tkilos: double.parse(totalKilos),
+                          precioUnitario: double.parse(precioUnitario),
+                          precioRollo: 0.0,
+                          precioTotal: double.parse(precioTotal)));
+                  print(productoDB);
+                } else {
+                  final productoDB = await DBProvider.db.insertarProducto(
+                      ProductModel(
+                          producto: vproducto,
+                          tipoProducto: vtipoproducto,
+                          color: vcolor.toUpperCase(),
+                          ancho: double.parse(vancho),
+                          largo: double.parse(vlargo),
+                          espesor: double.parse(vespesor),
+                          cantidad: int.parse(vcantidad),
+                          unidad: vunidad,
+                          tkilos: double.parse(totalKilos),
+                          precioUnitario: double.parse(precioUnitario),
+                          precioRollo: precioRollo,
+                          precioTotal: double.parse(precioTotal)));
+                  print(productoDB);
+                }
+
+                Navigator.popAndPushNamed(context, '/cotizacion');
+
+                // Navigator.pushNamed(context, '/cotizacion');
               })
         ],
       ),
     );
   }
 
-  //WIDGET PARA MOSTRAR TARJETA FINAL DE LOS DATOS DE LA BOBINA
-  Widget mostrarDataBobina(String tipoBobina, String totalKilos,
-      String precioTotal, String precioPorMetro) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+  Widget _tipoProducto() {
+    if (bolsa) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(tipoBobina, style: szfuente),
-          valueItem('ANCHO            ', vanchoBobina),
-          valueItem('ESPESOR          ', vespesorBobina),
-          valueItem('CANDIDAD (METROS)', vCanMetros),
-          valueItem('PRECIO KILO      ', vpkiloBobina),
-          Divider(),
-          txtTOTAL,
-          valueItem('KILOS POR ROLLO', totalKilos),
-          valueItem('PRECIO TOTAL', precioTotal),
-          valueItem('PRECIO POR METRO.', precioPorMetro),
-          SizedBox(height: 20.0),
-          RaisedButton(
-              elevation: 0.0,
-              color: Colors.blue,
-              textColor: Colors.white,
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text('Añadir Item'),
-                SizedBox(width: 20.0),
-                Icon(Icons.add_shopping_cart_rounded)
-              ]),
-              onPressed: () {})
+          checkOption(
+            'Bolsa Baja',
+            Checkbox(
+                value: bbaja,
+                onChanged: (val) {
+                  setState(() {
+                    if (val) {
+                      vtipoproducto = 'BAJA';
+                      bbaja = val;
+                      balta = false;
+                      bpp = false;
+                    } else {
+                      bbaja = false;
+                    }
+                  });
+                }),
+          ),
+          checkOption(
+            'Bolsa Alta',
+            Checkbox(
+                value: balta,
+                onChanged: (val) {
+                  setState(() {
+                    if (val) {
+                      vtipoproducto = 'ALTA';
+                      bbaja = false;
+                      balta = val;
+                      bpp = false;
+                    }
+                  });
+                }),
+          ),
+          checkOption(
+            'Bolsa PP',
+            Checkbox(
+                value: bpp,
+                onChanged: (val) {
+                  setState(() {
+                    if (val) {
+                      vtipoproducto = 'PP';
+                      bbaja = false;
+                      balta = false;
+                      bpp = val;
+                    }
+                  });
+                }),
+          )
         ],
-      ),
-    );
+      );
+    } else if (bobina) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          checkOption(
+              'PEBD',
+              Checkbox(
+                  value: bobPEBD,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value) {
+                        vtipoproducto = 'PEBD';
+                        bobPEBD = value;
+                        bobPEAD = false;
+                        bobPP = false;
+                      } else {
+                        bobPEBD = false;
+                      }
+                    });
+                  })),
+          checkOption(
+              'PEAD',
+              Checkbox(
+                  value: bobPEAD,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value) {
+                        vtipoproducto = 'PEAD';
+                        bobPEAD = value;
+                        bobPP = false;
+                        bobPEBD = false;
+                      } else {
+                        bobPEAD = false;
+                      }
+                    });
+                  })),
+          checkOption(
+              'PP',
+              Checkbox(
+                  value: bobPP,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value == true) {
+                        vtipoproducto = 'PP';
+                        bobPP = value;
+                        bobPEBD = false;
+                        bobPEAD = false;
+                      } else {
+                        bobPP = false;
+                      }
+                    });
+                  })),
+        ],
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _precioRollo() {
+    if (bobina)
+      return valueItem('PRECIO ROLLO', precioRollo.toString());
+    else
+      return SizedBox(height: 0);
   }
 }
