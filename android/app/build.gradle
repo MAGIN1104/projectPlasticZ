@@ -37,6 +37,8 @@ android {
         applicationId "com.example.plasticz"
         minSdkVersion 16
         targetSdkVersion 30
+        versionCode 0
+        versionName "0.0.1"
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
