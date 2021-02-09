@@ -20,6 +20,7 @@ class DBProvider {
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, 'ProductoDB.db');
+    print(path);
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       await db.execute('CREATE TABLE Producto('
@@ -48,6 +49,12 @@ class DBProvider {
   }
 
   //Borrar Producto
+  Future<int> borrarProducto(ProductModel producto) async {
+    final db = await dbProducto;
+    final resp =
+        await db.delete('Producto', where: 'id=?', whereArgs: [producto.id]);
+    return resp;
+  }
 
   //Obtener todos los Productos
   Future<List<ProductModel>> getAllProduct() async {

@@ -158,7 +158,6 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                           vancho = valor;
                         }
                       });
-                      print(vancho);
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -458,41 +457,57 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
               ]),
               onPressed: () async {
                 if (bolsa) {
-                  final productoDB = await DBProvider.db.insertarProducto(
-                      ProductModel(
-                          producto: vproducto,
-                          tipoProducto: vtipoproducto,
-                          color: vcolor.toUpperCase(),
-                          ancho: double.parse(vancho),
-                          largo: double.parse(vlargo),
-                          espesor: double.parse(vespesor),
-                          cantidad: int.parse(vcantidad),
-                          unidad: vunidad,
-                          tkilos: double.parse(totalKilos),
-                          precioUnitario: double.parse(precioUnitario),
-                          precioRollo: 0.0,
-                          precioTotal: double.parse(precioTotal)));
-                  print(productoDB);
+                  if (anchoController.text.isNotEmpty &&
+                      largoController.text.isNotEmpty &&
+                      espesorController.text.isNotEmpty &&
+                      cantidadController.text.isNotEmpty &&
+                      pkiloController.text.isNotEmpty &&
+                      colorController.text.isNotEmpty) {
+                    final productoDB = await DBProvider.db.insertarProducto(
+                        ProductModel(
+                            producto: vproducto,
+                            tipoProducto: vtipoproducto,
+                            color: vcolor.toUpperCase(),
+                            ancho: double.parse(vancho),
+                            largo: double.parse(vlargo),
+                            espesor: double.parse(vespesor),
+                            cantidad: int.parse(vcantidad),
+                            unidad: vunidad,
+                            tkilos: double.parse(totalKilos),
+                            precioUnitario: double.parse(precioUnitario),
+                            precioRollo: 0.0,
+                            precioTotal: double.parse(precioTotal)));
+                    Navigator.of(context).pop();
+                  } else {
+                    _showDialog();
+                  }
                 } else {
-                  final productoDB = await DBProvider.db.insertarProducto(
-                      ProductModel(
-                          producto: vproducto,
-                          tipoProducto: vtipoproducto,
-                          color: vcolor.toUpperCase(),
-                          ancho: double.parse(vancho),
-                          largo: double.parse(vlargo),
-                          espesor: double.parse(vespesor),
-                          cantidad: int.parse(vcantidad),
-                          unidad: vunidad,
-                          tkilos: double.parse(totalKilos),
-                          precioUnitario: double.parse(precioUnitario),
-                          precioRollo: precioRollo,
-                          precioTotal: double.parse(precioTotal)));
-                  print(productoDB);
+                  if (anchoController.text.isNotEmpty &&
+                      largoController.text.isNotEmpty &&
+                      espesorController.text.isNotEmpty &&
+                      cantidadController.text.isNotEmpty &&
+                      pkiloController.text.isNotEmpty &&
+                      colorController.text.isNotEmpty) {
+                    final productoDB = await DBProvider.db.insertarProducto(
+                        ProductModel(
+                            producto: vproducto,
+                            tipoProducto: vtipoproducto,
+                            color: vcolor.toUpperCase(),
+                            ancho: double.parse(vancho),
+                            largo: double.parse(vlargo),
+                            espesor: double.parse(vespesor),
+                            cantidad: int.parse(vcantidad),
+                            unidad: vunidad,
+                            tkilos: double.parse(totalKilos),
+                            precioUnitario: double.parse(precioUnitario),
+                            precioRollo: precioRollo,
+                            precioTotal: double.parse(precioTotal)));
+                    print(productoDB);
+                    Navigator.of(context).pop();
+                  } else {
+                    _showDialog();
+                  }
                 }
-
-                Navigator.popAndPushNamed(context, '/cotizacion');
-
                 // Navigator.pushNamed(context, '/cotizacion');
               })
         ],
@@ -618,5 +633,36 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
       return valueItem('PRECIO ROLLO', precioRollo.toString());
     else
       return SizedBox(height: 0);
+  }
+
+  _showDialog() {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('CAMPOS INCOMPLETOS'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Center(child: Icon(Icons.edit, size: 40)),
+                  SizedBox(height: 10.0),
+                  Text(
+                    'No puedes añadir este item hasta que completes todos los campos.',
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: Text('ACEPTAR'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }

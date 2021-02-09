@@ -37,9 +37,12 @@ class _CotizacionViewState extends State<CotizacionView> {
                 itemBuilder: (_, i) {
                   return Dismissible(
                     key: UniqueKey(),
-                    // onDismissed: (DismissDirection direccion) {
-                    //   //TODO: IMPLEMENTAR METODO BORRAR
-                    // },
+                    onDismissed: (DismissDirection direccion) {
+                      //TODO: IMPLEMENTAR METODO BORRAR
+                      setState(() {
+                        DBProvider.db.borrarProducto(resp[i]);
+                      });
+                    },
                     child: Card(
                       child: ExpansionTile(
                         title: Text(
@@ -60,8 +63,10 @@ class _CotizacionViewState extends State<CotizacionView> {
                                 Divider(),
                                 Text('TOTAL', style: descripcionItemStyle),
                                 _detailsItem('Kilos', '${resp[i].tkilos}'),
-                                _detailsItem('Precio c/Bolsa',
+                                _detailsItem('Precio Unitario',
                                     '${resp[i].precioUnitario}'),
+                                _precioRollo('${resp[i].producto}',
+                                    '${resp[i].precioRollo}'),
                                 _detailsItem(
                                     'Precio Total', '${resp[i].precioTotal}'),
                               ],
@@ -85,8 +90,9 @@ class _CotizacionViewState extends State<CotizacionView> {
         child: Icon(
           Icons.add,
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, '/insertarProducto');
+        onPressed: () async {
+          await Navigator.pushNamed(context, '/insertarProducto');
+          setState(() {});
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -183,5 +189,13 @@ class _CotizacionViewState extends State<CotizacionView> {
         Text(valor),
       ],
     );
+  }
+
+  Widget _precioRollo(String vtipo, String valor) {
+    if (vtipo == 'BOBINA') {
+      return _detailsItem('Precio Rollo', valor);
+    } else {
+      return SizedBox(height: 0);
+    }
   }
 }
