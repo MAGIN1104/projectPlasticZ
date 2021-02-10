@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Operaciones.dart';
@@ -9,6 +10,14 @@ class RegistrarProducto extends StatefulWidget {
 }
 
 class _RegistrarProductoState extends State<RegistrarProducto> {
+  void bloque() {
+    SystemChrome.setPreferredOrientations([
+      /**PARA MANTENER VERTICAL */
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
+  }
+
   bool bolsa = false, bobina = false;
   bool bbaja = false, balta = false, bpp = false;
   bool bobPEBD = false, bobPEAD = false, bobPP = false;
@@ -39,6 +48,7 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
 
   @override
   Widget build(BuildContext context) {
+    bloque();
     return Scaffold(
         appBar: AppBar(
           title: Text('Registro de Producto'),
@@ -152,14 +162,17 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: anchoController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.characters.characterAt(0).contains('.') ||
+                            valor.characters.characterAt(0).contains(',')) {
                           vancho = "0";
                         } else {
                           vancho = valor;
                         }
                       });
                     },
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(
+                        decimal: true, signed: false),
                     decoration: InputDecoration(
                       hintText: 'Ej. 12.3 ',
                     ))),
@@ -178,7 +191,9 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: largoController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.characters.characterAt(0).contains('.') ||
+                            valor.characters.characterAt(0).contains(',')) {
                           vlargo = "0";
                         } else {
                           vlargo = valor;
@@ -201,20 +216,23 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 width: 150.0,
                 child: TextFormField(
-                    controller: espesorController,
-                    onChanged: (valor) {
-                      setState(() {
-                        if (valor.isEmpty) {
-                          vespesor = "0";
-                        } else {
-                          vespesor = valor;
-                        }
-                      });
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Ej. 12.3',
-                    ))),
+                  controller: espesorController,
+                  onChanged: (valor) {
+                    setState(() {
+                      if (valor.isEmpty ||
+                          valor.characters.characterAt(0).contains('.') ||
+                          valor.characters.characterAt(0).contains(',')) {
+                        vespesor = "0";
+                      } else {
+                        vespesor = valor;
+                      }
+                    });
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: 'Ej. 12.3',
+                  ),
+                )),
           ],
         ),
 
@@ -230,7 +248,10 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: cantidadController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.isEmpty ||
+                            valor.contains('.') ||
+                            valor.contains(',')) {
                           vcantidad = "0";
                         } else {
                           vcantidad = valor;
@@ -239,7 +260,7 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 12.3',
+                      hintText: 'Ej. 12',
                     ))),
           ],
         ),
@@ -256,7 +277,9 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: pkiloController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.characters.characterAt(0).contains('.') ||
+                            valor.characters.characterAt(0).contains(',')) {
                           vpkilo = "0";
                         } else {
                           vpkilo = valor;
@@ -317,89 +340,95 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
     double totalPrecioxUnidad = 0;
     double totalPrecio = 0;
 
-    //TARJETAS DE LOS RESULTADOS DE LAS BOLSAS
+    try {
+      //CONDICION PARA OPERACION DE LAS BOLSAS
+      if (bbaja && bolsa) {
+        vtotalkilo = double.parse(operacion
+            .bolsaBajaKilos(double.parse(vancho), double.parse(vlargo),
+                double.parse(vespesor), int.parse(vcantidad))
+            .toStringAsFixed(4));
+        totalPrecio = double.parse(operacion
+            .precioTotal(vtotalkilo, double.parse(vpkilo))
+            .toStringAsFixed(3));
+        totalPrecioxUnidad = double.parse(operacion
+            .precioXUnidad(totalPrecio, double.parse(vcantidad))
+            .toStringAsFixed(7));
+      } else if (balta && bolsa) {
+        vtotalkilo = double.parse(operacion
+            .bolsaAKilos(double.parse(vancho), double.parse(vlargo),
+                double.parse(vespesor), int.parse(vcantidad))
+            .toStringAsFixed(4));
+        totalPrecio = double.parse(operacion
+            .precioTotal(vtotalkilo, double.parse(vpkilo))
+            .toStringAsFixed(3));
+        totalPrecioxUnidad = double.parse(operacion
+            .precioXUnidad(totalPrecio, double.parse(vcantidad))
+            .toStringAsFixed(7));
+      } else if (bpp && bolsa) {
+        vtotalkilo = double.parse(operacion
+            .bolsaPPKilos(double.parse(vancho), double.parse(vlargo),
+                double.parse(vespesor), int.parse(vcantidad))
+            .toStringAsFixed(4));
+        totalPrecio = double.parse(operacion
+            .precioTotal(vtotalkilo, double.parse(vpkilo))
+            .toStringAsFixed(3));
+        totalPrecioxUnidad = double.parse(operacion
+            .precioXUnidad(totalPrecio, double.parse(vcantidad))
+            .toStringAsFixed(7));
+      }
 
-    //CONDICION PARA OPERACION DE LAS BOLSAS
-    if (bbaja && bolsa) {
-      vtotalkilo = double.parse(operacion
-          .bolsaBajaKilos(double.parse(vancho), double.parse(vlargo),
-              double.parse(vespesor), int.parse(vcantidad))
-          .toStringAsFixed(4));
-      totalPrecio = double.parse(operacion
-          .precioTotal(vtotalkilo, double.parse(vpkilo))
-          .toStringAsFixed(3));
-      totalPrecioxUnidad = double.parse(operacion
-          .precioXUnidad(totalPrecio, double.parse(vcantidad))
-          .toStringAsFixed(7));
-    } else if (balta && bolsa) {
-      vtotalkilo = double.parse(operacion
-          .bolsaAKilos(double.parse(vancho), double.parse(vlargo),
-              double.parse(vespesor), int.parse(vcantidad))
-          .toStringAsFixed(4));
-      totalPrecio = double.parse(operacion
-          .precioTotal(vtotalkilo, double.parse(vpkilo))
-          .toStringAsFixed(3));
-      totalPrecioxUnidad = double.parse(operacion
-          .precioXUnidad(totalPrecio, double.parse(vcantidad))
-          .toStringAsFixed(7));
-    } else if (bpp && bolsa) {
-      vtotalkilo = double.parse(operacion
-          .bolsaPPKilos(double.parse(vancho), double.parse(vlargo),
-              double.parse(vespesor), int.parse(vcantidad))
-          .toStringAsFixed(4));
-      totalPrecio = double.parse(operacion
-          .precioTotal(vtotalkilo, double.parse(vpkilo))
-          .toStringAsFixed(3));
-      totalPrecioxUnidad = double.parse(operacion
-          .precioXUnidad(totalPrecio, double.parse(vcantidad))
-          .toStringAsFixed(7));
+      //CONDICION PARA OPERACION DE LAS BOBINAS
+      if (bobPEBD && bobina) {
+        vtotalkilo = double.parse(operacion
+            .kilosXRolloPEBD(double.parse(vancho), double.parse(vespesor),
+                double.parse(vlargo))
+            .toStringAsFixed(4));
+        precioRollo = double.parse(operacion
+            .precioTotal(vtotalkilo, double.parse(vpkilo))
+            .toStringAsFixed(3));
+        totalPrecioxUnidad = double.parse(operacion
+            .precioXUnidad(precioRollo, double.parse(vlargo))
+            .toStringAsFixed(7));
+        totalPrecio = double.parse(operacion
+            .precioTotal(precioRollo, double.parse(vcantidad))
+            .toStringAsFixed(3));
+      } else if (bobPP && bobina) {
+        vtotalkilo = double.parse(operacion
+            .kilosXRolloPP(double.parse(vancho), double.parse(vespesor),
+                double.parse(vlargo))
+            .toStringAsFixed(4));
+        precioRollo = double.parse(operacion
+            .precioTotal(vtotalkilo, double.parse(vpkilo))
+            .toStringAsFixed(3));
+        totalPrecioxUnidad = double.parse(operacion
+            .precioXUnidad(precioRollo, double.parse(vlargo))
+            .toStringAsFixed(7));
+        totalPrecio = double.parse(operacion
+            .precioTotal(precioRollo, double.parse(vcantidad))
+            .toStringAsFixed(3));
+      } else if (bobPEAD && bobina) {
+        vtotalkilo = double.parse(operacion
+            .kilosXRolloPP(double.parse(vancho), double.parse(vespesor),
+                double.parse(vlargo))
+            .toStringAsFixed(4));
+        precioRollo = double.parse(operacion
+            .precioTotal(vtotalkilo, double.parse(vpkilo))
+            .toStringAsFixed(3));
+        totalPrecioxUnidad = double.parse(operacion
+            .precioXUnidad(precioRollo, double.parse(vlargo))
+            .toStringAsFixed(7));
+        totalPrecio = double.parse(operacion
+            .precioTotal(precioRollo, double.parse(vcantidad))
+            .toStringAsFixed(3));
+      }
+    } catch (e) {
+      vancho = "0";
+      vlargo = "0";
+      vespesor = "0";
+      vcantidad = "0";
+      vpkilo = "0";
+      vcolor = "";
     }
-
-    //CONDICION PARA OPERACION DE LAS BOBINAS
-    if (bobPEBD && bobina) {
-      vtotalkilo = double.parse(operacion
-          .kilosXRolloPEBD(double.parse(vancho), double.parse(vespesor),
-              double.parse(vlargo))
-          .toStringAsFixed(4));
-      precioRollo = double.parse(operacion
-          .precioTotal(vtotalkilo, double.parse(vpkilo))
-          .toStringAsFixed(3));
-      totalPrecioxUnidad = double.parse(operacion
-          .precioXUnidad(precioRollo, double.parse(vlargo))
-          .toStringAsFixed(7));
-      totalPrecio = double.parse(operacion
-          .precioTotal(precioRollo, double.parse(vcantidad))
-          .toStringAsFixed(3));
-    } else if (bobPP && bobina) {
-      vtotalkilo = double.parse(operacion
-          .kilosXRolloPP(double.parse(vancho), double.parse(vespesor),
-              double.parse(vlargo))
-          .toStringAsFixed(4));
-      precioRollo = double.parse(operacion
-          .precioTotal(vtotalkilo, double.parse(vpkilo))
-          .toStringAsFixed(3));
-      totalPrecioxUnidad = double.parse(operacion
-          .precioXUnidad(precioRollo, double.parse(vlargo))
-          .toStringAsFixed(7));
-      totalPrecio = double.parse(operacion
-          .precioTotal(precioRollo, double.parse(vcantidad))
-          .toStringAsFixed(3));
-    } else if (bobPEAD && bobina) {
-      vtotalkilo = double.parse(operacion
-          .kilosXRolloPP(double.parse(vancho), double.parse(vespesor),
-              double.parse(vlargo))
-          .toStringAsFixed(4));
-      precioRollo = double.parse(operacion
-          .precioTotal(vtotalkilo, double.parse(vpkilo))
-          .toStringAsFixed(3));
-      totalPrecioxUnidad = double.parse(operacion
-          .precioXUnidad(precioRollo, double.parse(vlargo))
-          .toStringAsFixed(7));
-      totalPrecio = double.parse(operacion
-          .precioTotal(precioRollo, double.parse(vcantidad))
-          .toStringAsFixed(3));
-    }
-
     if (bobPEAD || bobPEBD || bobPP || bbaja || balta || bpp) {
       return Card(
           child: mostrarResultProducto(
@@ -463,23 +492,25 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                       cantidadController.text.isNotEmpty &&
                       pkiloController.text.isNotEmpty &&
                       colorController.text.isNotEmpty) {
-                    final productoDB = await DBProvider.db.insertarProducto(
-                        ProductModel(
-                            producto: vproducto,
-                            tipoProducto: vtipoproducto,
-                            color: vcolor.toUpperCase(),
-                            ancho: double.parse(vancho),
-                            largo: double.parse(vlargo),
-                            espesor: double.parse(vespesor),
-                            cantidad: int.parse(vcantidad),
-                            unidad: vunidad,
-                            tkilos: double.parse(totalKilos),
-                            precioUnitario: double.parse(precioUnitario),
-                            precioRollo: 0.0,
-                            precioTotal: double.parse(precioTotal)));
+                    await DBProvider.db.insertarProducto(ProductModel(
+                        producto: vproducto,
+                        tipoProducto: vtipoproducto,
+                        color: vcolor.toUpperCase(),
+                        ancho: double.parse(vancho),
+                        largo: double.parse(vlargo),
+                        espesor: double.parse(vespesor),
+                        cantidad: int.parse(vcantidad),
+                        unidad: vunidad,
+                        tkilos: double.parse(totalKilos),
+                        precioUnitario: double.parse(precioUnitario),
+                        precioRollo: 0.0,
+                        precioTotal: double.parse(precioTotal)));
                     Navigator.of(context).pop();
                   } else {
-                    _showDialog();
+                    _showDialog(
+                        'CAMPOS INCOMPLETOS',
+                        'No puedes añadir este item hasta que completes todos los campos.',
+                        Icon(Icons.edit, size: 40));
                   }
                 } else {
                   if (anchoController.text.isNotEmpty &&
@@ -505,7 +536,10 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     print(productoDB);
                     Navigator.of(context).pop();
                   } else {
-                    _showDialog();
+                    _showDialog(
+                        'CAMPOS INCOMPLETOS',
+                        'No puedes añadir este item hasta que completes todos los campos.',
+                        Icon(Icons.edit, size: 40));
                   }
                 }
                 // Navigator.pushNamed(context, '/cotizacion');
@@ -635,20 +669,20 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
       return SizedBox(height: 0);
   }
 
-  _showDialog() {
+  _showDialog(String ktitulo, String kmensaje, Widget kicono) {
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('CAMPOS INCOMPLETOS'),
+            title: Text(ktitulo),
             content: SingleChildScrollView(
               child: ListBody(
                 children: [
-                  Center(child: Icon(Icons.edit, size: 40)),
+                  Center(child: kicono),
                   SizedBox(height: 10.0),
                   Text(
-                    'No puedes añadir este item hasta que completes todos los campos.',
+                    kmensaje,
                     textAlign: TextAlign.justify,
                   ),
                 ],

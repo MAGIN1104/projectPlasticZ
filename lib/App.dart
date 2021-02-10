@@ -8,9 +8,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/cotizacion',
+        initialRoute: '/condicionVentas',
         routes: {
-          '/': (context) => CondicionVentas(),
+          '/condicionVentas': (context) => CondicionVentas(),
           '/cotizacion': (context) => CotizacionView(),
           '/insertarProducto': (context) => RegistrarProducto(),
         });
