@@ -1,8 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
 import 'package:plasticz/Utils/Operaciones.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'PDFPage.dart';
+import 'package:ext_storage/ext_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CotizacionView extends StatefulWidget {
   @override
@@ -13,6 +21,7 @@ class _CotizacionViewState extends State<CotizacionView> {
   Opciones listaOpciones = new Opciones();
   Operaciones operacion = new Operaciones();
   bool bolsa = false, bobina = false;
+  String nombre = '';
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +182,7 @@ class _CotizacionViewState extends State<CotizacionView> {
 
   void optAccion(String opcion) {
     if (opcion == 'ExportarPDF') {
+      _verificarPermisos();
       print('ExportarPDF');
     } else if (opcion == 'Enviar') {
       print('Enviar');
@@ -197,5 +207,81 @@ class _CotizacionViewState extends State<CotizacionView> {
     } else {
       return SizedBox(height: 0);
     }
+  }
+
+  _generarPdfAndView(contex) async {
+    List<ProductModel> data = await DBProvider.db.getAllProduct();
+    final pw.Document pdf = pw.Document(deflate: zlib.encode);
+    pdf.addPage(pw.MultiPage(
+        pageFormat: PdfPageFormat.letter,
+        build: (context) => [
+              pw.Row(children: [
+                pw.Text('CLIENTE'),
+                pw.SizedBox(width: 20),
+                pw.Text('PEPITO'),
+                pw.SizedBox(width: 5),
+                pw.Text('PEREZ'),
+                pw.SizedBox(width: 5),
+                pw.Text('PEREZ'),
+              ]),
+              pw.Table.fromTextArray(
+                  cellPadding:
+                      pw.EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  context: context,
+                  data: <List<String>>[
+                    <String>[
+                      'Producto',
+                      'Detalle',
+                      'Ancho\n(cm)',
+                      'Largo\n(cm)',
+                      'Espesor\nmicrones',
+                      'Cantidad',
+                      'Unidad',
+                      'Eq.\nAprox(Kg)',
+                      'Rollos',
+                      'TOTAL\n(Bs)'
+                    ],
+                    ...data.map((e) => [
+                          e.producto,
+                          e.tipoProducto,
+                          e.ancho.toString(),
+                          e.largo.toString(),
+                          e.espesor.toString(),
+                          e.cantidad.toString(),
+                          e.unidad,
+                          e.tkilos.toString(),
+                          e.precioRollo.toString(),
+                          e.precioTotal.toString()
+                        ])
+                  ]),
+            ]));
+    final String dir = await ExtStorage.getExternalStoragePublicDirectory(
+        ExtStorage.DIRECTORY_DOWNLOADS);
+    final String path = '$dir/pruebaFlutter.pdf';
+    final File file = File(path);
+    file.writeAsBytesSync(await pdf.save());
+    print(path);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => PDFViewerPage(path: path)));
+  }
+
+  void _verificarPermisos() async {
+    final status = await Permission.storage.request();
+    switch (status) {
+      case PermissionStatus.granted:
+        _generarPdfAndView(context);
+        break;
+      case PermissionStatus.undetermined:
+      case PermissionStatus.denied:
+      case PermissionStatus.restricted:
+      case PermissionStatus.limited:
+      case PermissionStatus.permanentlyDenied:
+        openAppSettings();
+    }
+    // if (status == PermissionStatus.granted) {
+    //   _generarPdfAndView(context);
+    // } else {
+    //   print('No se pudo guardar');
+    // }
   }
 }

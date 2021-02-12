@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CondicionVentas extends StatefulWidget {
   @override
@@ -10,9 +11,14 @@ class CondicionVentas extends StatefulWidget {
 class _CondicionVentasState extends State<CondicionVentas> {
   Opciones listaOpciones = new Opciones();
   String valorPago, valorLugar, valorDiaEntrega, valorBanco;
-  bool forma1 = true,
+  final numeroCuentaController = TextEditingController();
+  final nombreCuentaController = TextEditingController();
+  final numChequeController = TextEditingController();
+  final detalleEfectivoController = TextEditingController();
+
+  bool forma1 = false,
       forma2 = false,
-      forma3 = true,
+      forma3 = false,
       optCliche = false,
       optImpuesto = false;
   @override
@@ -24,15 +30,20 @@ class _CondicionVentasState extends State<CondicionVentas> {
       ),
       body: ListView(
         children: [
-          _tipodePago(),
-          Divider(),
-          _lugarEntrega(),
-          Divider(),
-          _tiempoEntrega(),
-          Divider(),
-          _fomaPago(),
-          Divider(),
-          _optFinal()
+          _tarjeta(
+            Column(
+              children: [
+                _tipodePago(),
+                _lugarEntrega(),
+                _tiempoEntrega(),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          _tarjeta(_fomaPago()),
+          SizedBox(height: 10),
+          _tarjeta(_optFinal()),
+          SizedBox(height: 10)
         ],
       ),
     );
@@ -41,14 +52,14 @@ class _CondicionVentasState extends State<CondicionVentas> {
   Widget _tipodePago() {
     //DropDown
     return Padding(
-      padding: margenSimetrico,
+      padding: margenSimetrico2,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'Tipo de Pago ',
-            style: TextStyle(fontSize: 17),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
           DropdownButton(
               value: valorPago,
@@ -65,14 +76,13 @@ class _CondicionVentasState extends State<CondicionVentas> {
 
   Widget _lugarEntrega() {
     return Padding(
-      padding: margenSimetrico,
+      padding: margenSimetrico2,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Lugar de Entrega ',
-            style: TextStyle(fontSize: 17),
+            'Lugar de Entrega',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
           DropdownButton(
               value: valorLugar,
@@ -89,14 +99,13 @@ class _CondicionVentasState extends State<CondicionVentas> {
 
   Widget _tiempoEntrega() {
     return Padding(
-      padding: margenSimetrico,
+      padding: margenSimetrico2,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'Tiempo de Entrega ',
-            style: TextStyle(fontSize: 17),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
           DropdownButton(
               value: valorDiaEntrega,
@@ -174,13 +183,13 @@ class _CondicionVentasState extends State<CondicionVentas> {
         ),
         Padding(
           padding: margenSimetrico,
-          child: _opcionFormaDepagos(forma1, forma2, forma3),
+          child: _opcionFormaDepagos(),
         )
       ],
     );
   }
 
-  Widget _opcionFormaDepagos(bool forma1, bool forma2, bool forma3) {
+  Widget _opcionFormaDepagos() {
     TextEditingController controller;
     final nombreCheque = TextFormField(
       controller: controller,
@@ -200,7 +209,8 @@ class _CondicionVentasState extends State<CondicionVentas> {
                 });
               }),
         ]),
-        TextFormField(
+        TextField(
+          controller: numeroCuentaController,
           keyboardType: TextInputType.number,
           decoration: txtNumCuenta,
         ),
@@ -238,7 +248,53 @@ class _CondicionVentasState extends State<CondicionVentas> {
                 optImpuesto = value;
               });
             }),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          child: RaisedButton(
+              color: Colors.blue,
+              textColor: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Siguiente',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(width: 10.0),
+                  Icon(Icons.navigate_next_rounded)
+                ],
+              ),
+              onPressed: () {
+                if (valorPago != null &&
+                    valorLugar != null &&
+                    valorDiaEntrega != null) {
+                  if (forma1) {
+                    //TODO:Validar Campos para el cheque
+                  } else if (forma2) {
+                    //TODO: Validar capos para el efectivo
+                  } else if (forma3) {
+                    //TODO: Validar campos para banco
+                  } else
+                    return;
+                  Navigator.pushNamed(context, '/cotizacion');
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Datos incompletos.",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      // timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.grey,
+                      // textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                // Navigator.pushNamed(context, '/cotizacion');
+              }),
+        )
       ],
+    );
+  }
+
+  Widget _tarjeta(Widget hijos) {
+    return Card(
+      child: hijos,
     );
   }
 }
