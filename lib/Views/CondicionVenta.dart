@@ -15,7 +15,6 @@ class _CondicionVentasState extends State<CondicionVentas> {
   final nombreCuentaController = TextEditingController();
   final numChequeController = TextEditingController();
   final detalleEfectivoController = TextEditingController();
-
   bool forma1 = false,
       forma2 = false,
       forma3 = false,
@@ -33,9 +32,11 @@ class _CondicionVentasState extends State<CondicionVentas> {
           _tarjeta(
             Column(
               children: [
+                SizedBox(height: 10.0),
                 _tipodePago(),
                 _lugarEntrega(),
                 _tiempoEntrega(),
+                SizedBox(height: 10.0),
               ],
             ),
           ),
@@ -52,23 +53,26 @@ class _CondicionVentasState extends State<CondicionVentas> {
   Widget _tipodePago() {
     //DropDown
     return Padding(
-      padding: margenSimetrico2,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Tipo de Pago ',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            'TIPO DE PAGO',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          DropdownButton(
-              value: valorPago,
-              items: listaOpciones.getOpcionPago(),
-              onChanged: (opt) {
-                setState(() {
-                  valorPago = opt;
-                });
-              }),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DropdownButton(
+                value: valorPago,
+                items: listaOpciones.getOpcionPago(),
+                onChanged: (opt) {
+                  setState(() {
+                    valorPago = opt;
+                  });
+                }),
+          ),
         ],
       ),
     );
@@ -76,22 +80,26 @@ class _CondicionVentasState extends State<CondicionVentas> {
 
   Widget _lugarEntrega() {
     return Padding(
-      padding: margenSimetrico2,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Lugar de Entrega',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            'LUGAR DE ENTREGA',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          DropdownButton(
-              value: valorLugar,
-              items: listaOpciones.getOpcionLugar(),
-              onChanged: (opt) {
-                setState(() {
-                  valorLugar = opt;
-                });
-              }),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DropdownButton(
+                value: valorLugar,
+                items: listaOpciones.getOpcionLugar(),
+                onChanged: (opt) {
+                  setState(() {
+                    valorLugar = opt;
+                  });
+                }),
+          ),
         ],
       ),
     );
@@ -99,22 +107,26 @@ class _CondicionVentasState extends State<CondicionVentas> {
 
   Widget _tiempoEntrega() {
     return Padding(
-      padding: margenSimetrico2,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Tiempo de Entrega ',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            'TIEMPO DE ENTREGA ',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          DropdownButton(
-              value: valorDiaEntrega,
-              items: listaOpciones.getOpcionDiasEntrega(),
-              onChanged: (opt) {
-                setState(() {
-                  valorDiaEntrega = opt;
-                });
-              }),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DropdownButton(
+                value: valorDiaEntrega,
+                items: listaOpciones.getOpcionDiasEntrega(),
+                onChanged: (opt) {
+                  setState(() {
+                    valorDiaEntrega = opt;
+                  });
+                }),
+          ),
         ],
       ),
     );
@@ -197,18 +209,20 @@ class _CondicionVentasState extends State<CondicionVentas> {
     );
 
     final banco = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Seleccione un Banco'),
-          DropdownButton(
-              value: valorBanco,
-              items: listaOpciones.getOpcionBanco(),
-              onChanged: (opt) {
-                setState(() {
-                  valorBanco = opt;
-                });
-              }),
-        ]),
+        Text(
+          'SELECCIONE UN BANCO',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        DropdownButton(
+            value: valorBanco,
+            items: listaOpciones.getOpcionBanco(),
+            onChanged: (opt) {
+              setState(() {
+                valorBanco = opt;
+              });
+            }),
         TextField(
           controller: numeroCuentaController,
           keyboardType: TextInputType.number,
@@ -262,7 +276,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
                   Icon(Icons.navigate_next_rounded)
                 ],
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (valorPago != null &&
                     valorLugar != null &&
                     valorDiaEntrega != null) {
@@ -274,7 +288,8 @@ class _CondicionVentasState extends State<CondicionVentas> {
                     //TODO: Validar campos para banco
                   } else
                     return;
-                  Navigator.pushNamed(context, '/cotizacion');
+                  await Navigator.pushNamed(context, '/cotizacion');
+                  setState(() {});
                 } else {
                   Fluttertoast.showToast(
                       msg: "Datos incompletos.",
@@ -287,6 +302,9 @@ class _CondicionVentasState extends State<CondicionVentas> {
                 }
                 // Navigator.pushNamed(context, '/cotizacion');
               }),
+        ),
+        SizedBox(
+          height: 20,
         )
       ],
     );

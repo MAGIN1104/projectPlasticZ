@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:plasticz/Models/PersonModel.dart';
 import 'package:plasticz/Models/ProductModel.dart';
 export 'package:plasticz/Models/ProductModel.dart';
 import 'package:sqflite/sqflite.dart';
@@ -38,6 +39,13 @@ class DBProvider {
           'precioRollo DOUBLE(10000,8),'
           'precioTotal DOUBLE(10000,8)'
           ')');
+      await db.execute('CREATE TABLE Cliente('
+          'nombre TEXT,'
+          'ci TEXT,'
+          'empresa TEXT,'
+          'email TEXT,'
+          'cel TEXT'
+          ')');
     });
   }
 
@@ -45,6 +53,20 @@ class DBProvider {
   Future<int> insertarProducto(ProductModel productItem) async {
     final db = await dbProducto;
     final resp = await db.insert('Producto', productItem.toJson());
+    return resp;
+  }
+
+  //Insertar Cliente
+  Future<int> insertarCliente(PersonaModel cliente) async {
+    final db = await dbProducto;
+    final resp = await db.insert('Cliente', cliente.toJson());
+    return resp;
+  }
+
+  //Borrar Clientes
+  Future<int> borrarTodoCliente() async {
+    final db = await dbProducto;
+    final resp = db.delete('Cliente');
     return resp;
   }
 
@@ -56,6 +78,13 @@ class DBProvider {
     return resp;
   }
 
+  //Borrar Tabla
+  Future<int> borrarTodoProducto() async {
+    final db = await dbProducto;
+    final resp = db.delete('Producto');
+    return resp;
+  }
+
   //Obtener todos los Productos
   Future<List<ProductModel>> getAllProduct() async {
     final db = await dbProducto;
@@ -64,5 +93,15 @@ class DBProvider {
       return [];
     else
       return resp.map((json) => ProductModel.fromJson(json)).toList();
+  }
+
+  //Obtener cliente
+  Future<List<PersonaModel>> getCliente() async {
+    final db = await dbProducto;
+    final resp = await db.query('Cliente');
+    if (resp.isEmpty)
+      return [];
+    else
+      return resp.map((json) => PersonaModel.fromJson(json)).toList();
   }
 }

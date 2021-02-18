@@ -152,7 +152,9 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: anchoController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.characters.characterAt(0).contains('.') ||
+                            valor.characters.characterAt(0).contains(',')) {
                           vancho = "0";
                         } else {
                           vancho = valor;
@@ -178,7 +180,9 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: largoController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.characters.characterAt(0).contains('.') ||
+                            valor.characters.characterAt(0).contains(',')) {
                           vlargo = "0";
                         } else {
                           vlargo = valor;
@@ -204,7 +208,9 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: espesorController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.characters.characterAt(0).contains('.') ||
+                            valor.characters.characterAt(0).contains(',')) {
                           vespesor = "0";
                         } else {
                           vespesor = valor;
@@ -230,7 +236,10 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: cantidadController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.isEmpty ||
+                            valor.contains('.') ||
+                            valor.contains(',')) {
                           vcantidad = "0";
                         } else {
                           vcantidad = valor;
@@ -239,7 +248,7 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: 'Ej. 12.3',
+                      hintText: 'Ej. 12',
                     ))),
           ],
         ),
@@ -256,7 +265,9 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                     controller: pkiloController,
                     onChanged: (valor) {
                       setState(() {
-                        if (valor.isEmpty) {
+                        if (valor.isEmpty ||
+                            valor.characters.characterAt(0).contains('.') ||
+                            valor.characters.characterAt(0).contains(',')) {
                           vpkilo = "0";
                         } else {
                           vpkilo = valor;

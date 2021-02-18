@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
+import 'package:plasticz/Models/PersonModel.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
@@ -26,6 +27,8 @@ class _CotizacionViewState extends State<CotizacionView> {
   @override
   Widget build(BuildContext context) {
     final productos = DBProvider.db.getAllProduct();
+    // final ArgsClient args = ModalRoute.of(context).settings.arguments;
+    // nombre = args.nombre;
     return Scaffold(
       appBar: AppBar(
         title: Text('Cotización'),
@@ -108,67 +111,6 @@ class _CotizacionViewState extends State<CotizacionView> {
     );
   }
 
-  //POPUP DE ALERTA
-  _showDialog() {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Seleccione Producto'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Checkbox(
-                              value: bolsa,
-                              onChanged: (val) {
-                                setState(() {
-                                  if (val == true) {
-                                    bolsa = val;
-                                    bobina = false;
-                                  }
-                                });
-                              }),
-                          Text('BOLSA')
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                              value: bobina,
-                              onChanged: (val) {
-                                setState(() {
-                                  if (val == true) {
-                                    bobina = val;
-                                    bolsa = false;
-                                  }
-                                });
-                              }),
-                          Text('BOBINA')
-                        ],
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                child: Text('Ok!!!'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
-  }
-
   Widget _menuOption() {
     return PopupMenuButton(
       onSelected: optAccion,
@@ -184,10 +126,9 @@ class _CotizacionViewState extends State<CotizacionView> {
     if (opcion == 'ExportarPDF') {
       _verificarPermisos();
       print('ExportarPDF');
-    } else if (opcion == 'Enviar') {
-      print('Enviar');
     } else {
       print('Nueva Cotización');
+      _borrarTablas();
     }
   }
 
@@ -210,7 +151,10 @@ class _CotizacionViewState extends State<CotizacionView> {
   }
 
   _generarPdfAndView(contex) async {
+    String path;
     List<ProductModel> data = await DBProvider.db.getAllProduct();
+    List<PersonaModel> clientdata = await DBProvider.db.getCliente();
+
     final pw.Document pdf = pw.Document(deflate: zlib.encode);
     pdf.addPage(pw.MultiPage(
         pageFormat: PdfPageFormat.letter,
@@ -218,12 +162,9 @@ class _CotizacionViewState extends State<CotizacionView> {
               pw.Row(children: [
                 pw.Text('CLIENTE'),
                 pw.SizedBox(width: 20),
-                pw.Text('PEPITO'),
-                pw.SizedBox(width: 5),
-                pw.Text('PEREZ'),
-                pw.SizedBox(width: 5),
-                pw.Text('PEREZ'),
+                pw.Text(clientdata.first.nombre),
               ]),
+              pw.SizedBox(height: 20.0),
               pw.Table.fromTextArray(
                   cellPadding:
                       pw.EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -255,33 +196,55 @@ class _CotizacionViewState extends State<CotizacionView> {
                         ])
                   ]),
             ]));
-    final String dir = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DOWNLOADS);
-    final String path = '$dir/pruebaFlutter.pdf';
-    final File file = File(path);
-    file.writeAsBytesSync(await pdf.save());
-    print(path);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => PDFViewerPage(path: path)));
+
+    // final String dir = await ExtStorage.getExternalStoragePublicDirectory('DocumentsplasticZ');
+    Directory directorio;
+    if (Platform.isAndroid) {
+      directorio = await getExternalStorageDirectory();
+      print(directorio.path);
+
+      String newpath = "";
+      List<String> folders = directorio.path.split("/");
+      for (int x = 1; x < folders.length; x++) {
+        String folder = folders[x];
+        if (folder != "Android") {
+          newpath += "/" + folder;
+        } else {
+          break;
+        }
+      }
+      newpath = newpath + "/PlasticZ_PDFS";
+      directorio = Directory(newpath);
+      final String dir = directorio.path;
+      path =
+          '$dir/${clientdata.first.nombre.trim()}-${clientdata.first.ci}.pdf';
+      print('Directorio nuevo === > ${directorio.path}');
+    } else {
+      return false;
+    }
+    if (!await directorio.exists()) {
+      await directorio.create(recursive: true);
+    }
+    if (await directorio.exists()) {
+      final File file = File(path);
+      file.writeAsBytesSync(await pdf.save());
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => PDFViewerPage(path: path)));
+    }
   }
 
   void _verificarPermisos() async {
     final status = await Permission.storage.request();
-    switch (status) {
-      case PermissionStatus.granted:
-        _generarPdfAndView(context);
-        break;
-      case PermissionStatus.undetermined:
-      case PermissionStatus.denied:
-      case PermissionStatus.restricted:
-      case PermissionStatus.limited:
-      case PermissionStatus.permanentlyDenied:
-        openAppSettings();
+    if (status == PermissionStatus.granted) {
+      _generarPdfAndView(context);
+    } else {
+      openAppSettings();
     }
-    // if (status == PermissionStatus.granted) {
-    //   _generarPdfAndView(context);
-    // } else {
-    //   print('No se pudo guardar');
-    // }
+  }
+
+  void _borrarTablas() async {
+    await DBProvider.db.borrarTodoProducto();
+    await DBProvider.db.borrarTodoCliente();
+    await Navigator.popAndPushNamed(context, '/');
   }
 }

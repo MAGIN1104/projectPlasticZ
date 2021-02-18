@@ -1,37 +1,39 @@
 import 'package:flutter/material.dart';
 
 class Opciones {
-  List<String> tipodePago = ['Opcion 1', 'Opcion 2', 'Opcion 3'];
+  List<String> tipodePago = [
+    '50% al confirmar el pedido y 50% al entregar todo el pedido',
+    '15 Dias despues de la entrega del producto',
+    'Contraentrega'
+  ];
 
   List<String> lugarEntrega = [
-    'Lugar 1',
-    'Lugar 2',
-    'Lugar 3',
-    'Lugar 4',
-    'Lugar 5',
-    'Lugar 6',
+    'Instalaciones del cliente La Paz y El Alto',
+    'Instalaciones de Plastic Z SRL. (Almacenes)',
+    'Envio al interior pagado (Trasportadora)',
+    'Envio al interior por pagar',
+    'Envio al exterior pagado',
+    'EXW',
   ];
 
   List<String> diasEntrega = [
-    'Dias op1',
-    'Dias op2',
-    'Dias op3',
-    'Dias op4',
-    'Dias op5',
+    '10 Días habiles despues de la confirmacion',
+    '15 Días habiles despues de la confirmacion',
+    '25 Días habiles despues de la confirmacion',
+    '30 Días habiles despues de la confirmacion',
+    'Inmediato',
   ];
 
   List<String> tipobancos = [
-    'Banco 1',
-    'Banco 2',
-    'Banco 3',
-    'Banco 4',
-    'Banco 5',
-    'Banco 6',
-    'Banco 7',
-    'Banco 8',
+    'BCP',
+    'MERCANTIL SANTA CRUZ',
+    'BANCO NACIONAL DE BOLIVIA',
+    'BANCO SOL',
+    'BANCO FIE',
+    'BANCO UNION',
   ];
 
-  List<String> menuOptions = ["ExportarPDF", "Enviar", "Nueva Cotizacion"];
+  List<String> menuOptions = ["ExportarPDF", "Nueva Cotizacion"];
 
   List<DropdownMenuItem<String>> getOpcionPago() {
     List<DropdownMenuItem<String>> lista = [];
