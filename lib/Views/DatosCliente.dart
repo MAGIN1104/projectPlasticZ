@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
-import 'package:plasticz/Models/AgumentsClient.dart';
 import 'package:plasticz/Models/PersonModel.dart';
 
 class DatosCliente extends StatefulWidget {
@@ -156,18 +155,8 @@ class _DatosClienteState extends State<DatosCliente> {
                           mailController.text.isNotEmpty &&
                           celtelController.text.isNotEmpty) {
                         await _showDialog();
-                        await Navigator.pushNamed(context, '/condicion');
+
                         setState(() {});
-                        // final clientedb =
-                        //     await DBProvider.db.insertarCliente(PersonaModel(
-                        //   nombre: nombreCliente,
-                        //   ci: ciCliente,
-                        //   empresa: empresaCliente,
-                        //   email: mailCliente,
-                        //   cel: celtelCliente,
-                        // ));
-                        // Navigator.pushNamed(context, '/cotizacion',
-                        //     arguments: ArgsClient(nombreCliente));
                       } else {
                         Fluttertoast.showToast(
                             msg: "Complete todos los campos.",
@@ -202,14 +191,11 @@ class _DatosClienteState extends State<DatosCliente> {
                     height: 50,
                   )),
                   SizedBox(height: 10.0),
-                  Text('Nombre - ${nombreCliente.toUpperCase()}',
-                      textAlign: TextAlign.justify),
-                  Text('CI - $ciCliente', textAlign: TextAlign.justify),
-                  Text('Empresa - ${empresaCliente.toUpperCase()}',
-                      textAlign: TextAlign.justify),
-                  Text('Mail - $mailCliente', textAlign: TextAlign.justify),
-                  Text('Cel/Tel - $celtelCliente',
-                      textAlign: TextAlign.justify),
+                  Text('Nombre - ${nombreCliente.toUpperCase()}'),
+                  Text('CI - $ciCliente'),
+                  Text('Empresa - ${empresaCliente.toUpperCase()}'),
+                  Text('Mail - $mailCliente'),
+                  Text('Cel/Tel - $celtelCliente'),
                 ],
               ),
             ),
@@ -230,7 +216,7 @@ class _DatosClienteState extends State<DatosCliente> {
                     email: mailCliente,
                     cel: celtelCliente,
                   ));
-                  Navigator.of(context).pop();
+                  await Navigator.popAndPushNamed(context, '/cotizacion');
                 },
               )
             ],

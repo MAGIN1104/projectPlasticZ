@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:plasticz/Models/CondicionPagoModel.dart';
+import 'package:plasticz/Models/CondicionVentaModel.dart';
 import 'package:plasticz/Models/PersonModel.dart';
 import 'package:plasticz/Models/ProductModel.dart';
 export 'package:plasticz/Models/ProductModel.dart';
@@ -46,13 +48,46 @@ class DBProvider {
           'email TEXT,'
           'cel TEXT'
           ')');
+      await db.execute('CREATE TABLE CPago('
+          'tipoPago TEXT,'
+          'banco TEXT,'
+          'numCuenta TEXT,'
+          'nombre TEXT,'
+          'descripcion TEXT'
+          ')');
+      await db.execute('CREATE TABLE CVenta('
+          'formaPago TEXT,'
+          'lugarEntrega TEXT,'
+          'tiempoEntrega TEXT'
+          ')');
     });
   }
 
-  //Insertar Producto
-  Future<int> insertarProducto(ProductModel productItem) async {
+//Insertar CONDICION VENTA
+  Future<int> insertarCVenta(CondicionVentaModel cventa) async {
     final db = await dbProducto;
-    final resp = await db.insert('Producto', productItem.toJson());
+    final resp = await db.insert('CVenta', cventa.toJson());
+    return resp;
+  }
+
+  //Borrar CONDICION VENTA
+  Future<int> borrarTodoCVenta() async {
+    final db = await dbProducto;
+    final resp = db.delete('CVenta');
+    return resp;
+  }
+
+  //Insertar CONDICION PAGO
+  Future<int> insertarCPago(CondicionPagoModel cpago) async {
+    final db = await dbProducto;
+    final resp = await db.insert('CPago', cpago.toJson());
+    return resp;
+  }
+
+  //Borrar CONDICION PAGO
+  Future<int> borrarTodoCPago() async {
+    final db = await dbProducto;
+    final resp = db.delete('CPago');
     return resp;
   }
 
@@ -67,6 +102,13 @@ class DBProvider {
   Future<int> borrarTodoCliente() async {
     final db = await dbProducto;
     final resp = db.delete('Cliente');
+    return resp;
+  }
+
+  //Insertar Producto
+  Future<int> insertarProducto(ProductModel productItem) async {
+    final db = await dbProducto;
+    final resp = await db.insert('Producto', productItem.toJson());
     return resp;
   }
 
@@ -103,5 +145,25 @@ class DBProvider {
       return [];
     else
       return resp.map((json) => PersonaModel.fromJson(json)).toList();
+  }
+
+  //Obtener CVentas
+  Future<List<CondicionVentaModel>> getCVentas() async {
+    final db = await dbProducto;
+    final resp = await db.query('CVenta');
+    if (resp.isEmpty)
+      return [];
+    else
+      return resp.map((json) => CondicionVentaModel.fromJson(json)).toList();
+  }
+
+  //Obtener CVentas
+  Future<List<CondicionPagoModel>> getCPago() async {
+    final db = await dbProducto;
+    final resp = await db.query('CPago');
+    if (resp.isEmpty)
+      return [];
+    else
+      return resp.map((json) => CondicionPagoModel.fromJson(json)).toList();
   }
 }

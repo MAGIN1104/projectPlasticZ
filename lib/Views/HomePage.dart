@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:device_info/device_info.dart';
+// import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
-import 'package:imei_plugin/imei_plugin.dart';
+// import 'package:imei_plugin/imei_plugin.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,26 +10,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  DeviceInfoPlugin celInfo = DeviceInfoPlugin();
+  // DeviceInfoPlugin celInfo = DeviceInfoPlugin();
   List<Widget> textWidgets = [];
   String _imeiNumber = "Unknown";
   String _sn = "Unknown";
   @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
+  // void initState() {
+  //   super.initState();
+  //   initPlatformState();
+  // }
 
-  Future<void> initPlatformState() async {
-    String imeiNumber;
-    try {
-      imeiNumber = await ImeiPlugin.getImei();
-    } on PlatformException {}
-    if (!mounted) return;
-    setState(() {
-      _imeiNumber = imeiNumber;
-    });
-  }
+  // Future<void> initPlatformState() async {
+  //   String imeiNumber;
+  //   try {
+  //     // imeiNumber = await ImeiPlugin.getImei();
+  //   } on PlatformException {}
+  //   if (!mounted) return;
+  //   setState(() {
+  //     _imeiNumber = imeiNumber;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,8 @@ class _HomePageState extends State<HomePage> {
                     // });
                     await DBProvider.db.borrarTodoProducto();
                     await DBProvider.db.borrarTodoCliente();
-                    await Navigator.pushNamed(context, '/cliente');
+                    await Navigator.pushReplacementNamed(context, '/cliente');
+                    // await Navigator.pushNamed(context, '/cliente');
                   }),
             ),
             // ...textWidgets
