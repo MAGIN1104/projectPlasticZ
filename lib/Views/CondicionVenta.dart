@@ -227,11 +227,11 @@ class _CondicionVentasState extends State<CondicionVentas> {
   }
 
   Widget _opcionFormaDepagos() {
-    TextEditingController controller;
-    final nombreCheque = TextFormField(
-      controller: controller,
-      decoration: txtNombreCheque,
-    );
+    // TextEditingController controller;
+    // final nombreCheque = TextFormField(
+    //   controller: controller,
+    //   decoration: txtNombreCheque,
+    // );
 
     final banco = Container(
       padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -257,7 +257,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
         ],
       ),
     );
-    if (forma1 == true) return nombreCheque;
+    // if (forma1 == true) return nombreCheque;
     if (forma3 == true)
       return banco;
     else

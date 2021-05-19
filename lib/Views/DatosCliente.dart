@@ -158,12 +158,9 @@ class _DatosClienteState extends State<DatosCliente> {
 
                         setState(() {});
                       } else {
-                        Fluttertoast.showToast(
-                            msg: "Complete todos los campos.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.grey,
-                            fontSize: 15.0);
+                        final snackBar = SnackBar(
+                            content: Text('Complete todos los campos...!'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     }),
               ],

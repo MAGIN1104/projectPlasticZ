@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
@@ -21,17 +20,28 @@ class _CotizacionViewState extends State<CotizacionView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Cotización'),
         leading: IconButton(
           icon: Icon(Icons.highlight_remove_rounded),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
         actions: [
           IconButton(
             icon: Icon(Icons.payment_outlined),
             onPressed: () {
               setState(() {});
-              Navigator.pushNamed(context, '/condicion');
+              if (x) {
+                Navigator.pushNamed(context, '/condicion');
+              } else {
+                final snackBar = SnackBar(
+                  content: Text('Debe insertar almenos un producto.!'),
+                  duration: Duration(milliseconds: 1000),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             },
           )
         ],

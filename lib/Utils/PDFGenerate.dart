@@ -171,7 +171,6 @@ class GenerarPDF {
           //TOTAL A PAGAR
           pw.Container(
             alignment: pw.Alignment.centerRight,
-            // margin: const pw.EdgeInsets.symmetric(horizontal: 20),
             height: 10,
             child: pw.FittedBox(
               child: pw.Text(
@@ -285,44 +284,13 @@ class GenerarPDF {
               ],
             ],
           ),
-          pw.Container(
-            decoration: pw.BoxDecoration(
-              border: pw.Border.all(color: PdfColors.black),
-            ),
-            width: double.infinity,
-            child: pw.Container(
-              padding: pw.EdgeInsets.only(left: 5.0, top: 10.0, bottom: 10.0),
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  // pw.Row(
-                  //   children: [
-                  //     pw.Container(
-                  //       width: 18,
-                  //       child: pw.Text('3'),
-                  //     ),
-                  //     pw.Text(
-                  //       'DEPOSITO EN EFECTIVO',
-                  //       style: pw.TextStyle(fontSize: 12),
-                  //     ),
-                  //   ],
-                  // ),
-                  // pw.SizedBox(height: 10.0),
-                  // pw.Text('BANCO - ${cpdata.last.banco}',
-                  //     style: pw.TextStyle(fontSize: 12)),
-                  // pw.Text('NOMBRE - ${cpdata.last.nombre}',
-                  //     style: pw.TextStyle(fontSize: 12)),
-                  // pw.Text('N° CUENA - ${cpdata.last.numCuenta}',
-                  //     style: pw.TextStyle(fontSize: 12)),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );
 
     // final String dir = await ExtStorage.getExternalStoragePublicDirectory('DocumentsplasticZ');
+
+    //CREAMOS UNA CARPETA UNICA PARA LA EMPRESA
     Directory directorio;
     if (Platform.isAndroid) {
       directorio = await getExternalStorageDirectory();
@@ -358,6 +326,7 @@ class GenerarPDF {
     }
   }
 
+  //METODO PARA REALIZAR LA SUMA DE TOTALES DE CADA PRODUCTO
   Future<double> itemTotal() async {
     final resp = await DBProvider.db.getAllProduct();
     if (resp.isNotEmpty) {
