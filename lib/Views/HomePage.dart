@@ -53,8 +53,13 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Plasti Z',
-                style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold)),
+            Text(
+              'Plastic Z',
+              style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             SizedBox(height: 20.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 70),

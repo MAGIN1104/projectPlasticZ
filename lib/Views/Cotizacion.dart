@@ -23,14 +23,14 @@ class _CotizacionViewState extends State<CotizacionView> {
         centerTitle: true,
         title: Text('Cotización'),
         leading: IconButton(
-          icon: Icon(Icons.highlight_remove_rounded),
+          icon: Icon(Icons.delete_sweep_outlined),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.payment_outlined),
+            icon: Icon(Icons.playlist_add_check),
             onPressed: () {
               setState(() {});
               if (x) {
@@ -82,36 +82,6 @@ class _CotizacionViewState extends State<CotizacionView> {
       ),
     );
   }
-
-  // Widget _menuOption() {
-  //   return PopupMenuButton(
-  //     onSelected: optAccion,
-  //     itemBuilder: (BuildContext context) {
-  //       return listaOpciones.menuOptions
-  //           .map((dato) => PopupMenuItem(value: dato, child: Text(dato)))
-  //           .toList();
-  //     },
-  //   );
-  // }
-
-  // void optAccion(String opcion) {
-  //   if (opcion == 'ExportarPDF') {
-  //     if (x) {
-  //       _verificarPermisos();
-  //       print('ExportarPDF');
-  //     } else {
-  //       Fluttertoast.showToast(
-  //           msg: "Inserte nuevos items para generar PDF.",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.BOTTOM,
-  //           backgroundColor: Colors.grey,
-  //           fontSize: 15.0);
-  //     }
-  //   } else {
-  //     print('Nueva Cotización');
-  //     _borrarTablas();
-  //   }
-  // }
 
   Widget _detailsItem(String detalle, String valor) {
     return Row(

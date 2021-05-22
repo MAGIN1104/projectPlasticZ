@@ -35,19 +35,19 @@ class _CondicionVentasState extends State<CondicionVentas> {
       optImpuesto = false;
   @override
   Widget build(BuildContext context) {
-    GenerarPDF generaPDF = new GenerarPDF(context: context);
+    // GenerarPDF generaPDF = new GenerarPDF(context: context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('Condición Ventas'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.picture_as_pdf),
-            onPressed: () {
-              generaPDF.verificarPermisos();
-            },
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.picture_as_pdf),
+        //     onPressed: () {
+        //       generaPDF.verificarPermisos();
+        //     },
+        //   )
+        // ],
       ),
       body: ListView(
         children: [
@@ -65,7 +65,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
           SizedBox(height: 10),
           _tarjeta(_fomaPago()),
           SizedBox(height: 10),
-          _tarjeta(_optFinal()),
+          _tarjeta(_optFinal(context)),
           SizedBox(height: 10)
         ],
       ),
@@ -227,12 +227,6 @@ class _CondicionVentasState extends State<CondicionVentas> {
   }
 
   Widget _opcionFormaDepagos() {
-    // TextEditingController controller;
-    // final nombreCheque = TextFormField(
-    //   controller: controller,
-    //   decoration: txtNombreCheque,
-    // );
-
     final banco = Container(
       padding: EdgeInsets.symmetric(vertical: 20.0),
       width: double.infinity,
@@ -257,14 +251,13 @@ class _CondicionVentasState extends State<CondicionVentas> {
         ],
       ),
     );
-    // if (forma1 == true) return nombreCheque;
-    if (forma3 == true)
+    if (forma3)
       return banco;
     else
       return Container();
   }
 
-  Widget _optFinal() {
+  Widget _optFinal(context) {
     return Column(
       children: [
         CheckboxListTile(
@@ -291,7 +284,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Guardar Datos',
+                  Text('Terminar y generar PDF',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(width: 10.0),
                   // Icon(Icons.navigate_next_rounded)
@@ -366,6 +359,7 @@ class _CondicionVentasState extends State<CondicionVentas> {
                         fontSize: 16.0);
                   }
                   _showDialog();
+
                   setState(() {});
                 } else {
                   Fluttertoast.showToast(
@@ -438,9 +432,8 @@ class _CondicionVentasState extends State<CondicionVentas> {
                     nombre: valorNombre,
                     descripcion: valorDescripcion,
                   ));
-                  //await pdfDocument.generarPdfAndView(context);
-                  Navigator.of(context).pop();
-                  // Navigator.pushNamed(context, '/cotizacion');
+                  GenerarPDF generaPDF = new GenerarPDF(context: context);
+                  generaPDF.verificarPermisos();
                 },
               )
             ],
