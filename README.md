@@ -7,4 +7,4 @@ The application quotes the price of the products that were added, to finally gen
 ## Getting Started
 1. Clone the repository
 2. Run ``flutter packages get``
-3. Compile the application
+3. Compile the application with VSCODE or ANDROID STUDIO
