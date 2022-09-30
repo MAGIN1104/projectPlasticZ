@@ -235,7 +235,6 @@ class _RegistrarProductoState extends State<RegistrarProducto> {
                 )),
           ],
         ),
-
         //CANTIDAD
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
