@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:plasticz/Provider/DBProvider.dart';
 import 'package:plasticz/Utils/Constantes.dart';
 import 'package:plasticz/Utils/Opciones.dart';
@@ -10,6 +11,14 @@ class CotizacionView extends StatefulWidget {
 }
 
 class _CotizacionViewState extends State<CotizacionView> {
+  void bloque() {
+    SystemChrome.setPreferredOrientations([
+      /**PARA MANTENER VERTICAL */
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
+  }
+
   Opciones listaOpciones = new Opciones();
   Operaciones operacion = new Operaciones();
   bool bolsa = false, bobina = false, x;
@@ -18,6 +27,8 @@ class _CotizacionViewState extends State<CotizacionView> {
 
   @override
   Widget build(BuildContext context) {
+    bloque();
+    final productos = DBProvider.db.getAllProduct();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
